@@ -1,0 +1,12 @@
+<header *ngIf="user">
+  Hi {{ user.fullName }}: Boards
+  <div class="right">
+    <a (click)="logout()">Logout</a>
+  </div>
+</header>
+
+<section *ngIf="boards">
+  <div *ngFor="let board of boards">
+    {{ board.name }}
+  </div>
+</section>
