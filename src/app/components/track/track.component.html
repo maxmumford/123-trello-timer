@@ -1,11 +1,39 @@
-<mat-toolbar>
-    <a (click)="cards()">
-      <mat-icon>keyboard_backspace</mat-icon>
-    </a>
-    &nbsp;
-    <span *ngIf="card">{{ card.name }}</span>
-  </mat-toolbar>
+<mat-toolbar color="primary">
+  <mat-icon>access_time</mat-icon>
+  &nbsp;
+  <span>Timey</span>
+  <span class="spacer"></span>
+  <span *ngIf="track" class="track">{{ track.boardName }}: {{ track.cardName }} {{ track.duration }}</span>
+  <button *ngIf="selectedCard && selectedCard.id && !tracking" (click)="startTracking()" mat-raised-button color="accent">Start Tracking</button>
+  <button *ngIf="tracking" (click)="stopTracking()" mat-raised-button color="accent">Stop Tracking</button>
+</mat-toolbar>
   
-<section *ngIf="card" class="center">
-    <button (click)="track()" mat-raised-button color="accent">Start Tracking</button>    
-</section>
+<div class="track-container">
+  <section *ngIf="boards">
+    <mat-nav-list *ngFor="let board of boards">
+      <a mat-list-item (click)="selectBoard(board)" [class.selected]="selectedBoard && selectedBoard.id == board.id">
+        <div class="max-width">{{ board.name }}</div>
+
+        <!-- view timesheets button -->
+        <button *ngIf="selectedBoard && selectedBoard.id == board.id && viewMode == 'timer'" mat-icon-button (click)="viewTimesheets()" matTooltip="View Timesheets">
+          <mat-icon aria-label="View Timesheets">list</mat-icon>
+        </button>
+
+        <!-- view cards -->
+        <button *ngIf="selectedBoard && selectedBoard.id == board.id && viewMode == 'timesheets'" mat-icon-button (click)="viewCards()" matTooltip="View Cards">
+          <mat-icon aria-label="View Timesheets">timer</mat-icon>
+        </button>
+
+      </a>
+    </mat-nav-list>
+  </section>
+    
+
+  <section *ngIf="cards">
+    <mat-nav-list *ngFor="let card of cards">
+      <a mat-list-item (click)="selectCard(card)" [class.selected]="selectedCard && selectedCard.id == card.id">
+        <div>{{ card.name }}</div>
+      </a>
+    </mat-nav-list>
+  </section>
+</div>
