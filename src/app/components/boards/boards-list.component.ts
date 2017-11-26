@@ -4,11 +4,11 @@ import { AuthService } from 'app/services/auth.service';
 import { TrelloService, TrelloUser } from 'app/services/trello.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'timey-boards-list',
+  templateUrl: './boards-list.component.html',
+  styleUrls: ['./boards-list.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class BoardsListComponent implements OnInit {
 
   boards = null
   user: TrelloUser
@@ -21,12 +21,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    this.auth.getTrelloToken(auth => {
-      this.trello.getUser(auth).subscribe(response => {
-        this.user = response
-        this.trello.getBoards(auth, this.user.id).subscribe(boards => {
-          this.boards = boards
-        })
+    this.trello.getUser().subscribe(response => {
+      this.user = response
+      this.trello.getBoards(this.user.id).subscribe(boards => {
+        this.boards = boards
       })
     })
 
@@ -34,7 +32,7 @@ export class HomeComponent implements OnInit {
 
   logout(){
     this.auth.removeTrelloToken(() => {
-      this.electronService.getCurrentWindow().loadURL(`file://${__dirname}/src/auth/index.html`)
+      this.electronService.loadAuthPage()
     })
   }
 

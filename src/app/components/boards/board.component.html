@@ -1,0 +1,13 @@
+<mat-toolbar>
+  <a (click)="boards()">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </a>
+  &nbsp;
+  <span *ngIf="board">{{ board.name }}</span>
+</mat-toolbar>
+
+<section *ngIf="cards">
+  <mat-nav-list *ngFor="let card of cards">
+    <a mat-list-item [routerLink]="['/track', card.id]">{{ card.name }}</a>
+  </mat-nav-list>
+</section>  

@@ -17,7 +17,7 @@ function checkToken() {
   storage.get('token', function(error, data) {
     if (error) throw error;
 
-    if(data.token && data.token_secret){
+    if(data.token && data.tokenSecret){
       remote.getCurrentWindow().loadURL(`file://${__dirname}/../../index.html`)
       return
     }
@@ -28,9 +28,9 @@ function checkToken() {
 
       const req_data = querystring.parse(body);
       const token = req_data.oauth_token
-      const token_secret = req_data.oauth_token_secret
+      const tokenSecret = req_data.oauth_token_secret
 
-      storage.set('token', { token: token, token_secret: token_secret }, function(error) {
+      storage.set('token', { token: token, tokenSecret: tokenSecret }, function(error) {
         if (error) throw error;
         document.getElementById('webview').setAttribute("src", AUTHORIZE_TOKEN_URL + token);
       });
@@ -44,19 +44,20 @@ function storeToken(urlQuery, targetWindow) {
   storage.get('token', function(error, data) {
     if (error) throw error;
     
-    let token_secret = data.token_secret
+    let tokenSecret = data.tokenSecret
     
     const oauth = {
       consumer_key: CONSUMER_KEY,
       consumer_secret: CONSUMER_SECRET,
       token: verify_data.oauth_token,
-      token_secret: token_secret, // missing in test
+      token_secret: tokenSecret,
       verifier: verify_data.oauth_verifier,
     };
     
     request.post({url: ACCESS_TOKEN_URL, oauth: oauth}, (e, r, body) => {
       const token_data = querystring.parse(body);
-      storage.set('token', { token: token_data.oauth_token, token_secret: token_data.oauth_token_secret }, function(error) {
+      console.log("Returned token: ", token_data)
+      storage.set('token', { token: token_data.oauth_token, tokenSecret: token_data.oauth_token_secret }, function(error) {
         if (error) throw error;
         targetWindow.loadURL(`file://${__dirname}/index.html`);
       });

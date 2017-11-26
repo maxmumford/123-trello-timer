@@ -1,7 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-html, body {
-  margin: 0;
-  padding: 0;
+// import angular material theme
+@import "assets/scss/material-theme.scss";
 
-  height: 100%;
-}
+// import other css customisations
+@import "assets/scss/base.scss";
+@import "assets/scss/toolbar.scss";
+@import "assets/scss/misc.scss";

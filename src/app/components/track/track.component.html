@@ -1,0 +1,11 @@
+<mat-toolbar>
+    <a (click)="cards()">
+      <mat-icon>keyboard_backspace</mat-icon>
+    </a>
+    &nbsp;
+    <span *ngIf="card">{{ card.name }}</span>
+  </mat-toolbar>
+  
+<section *ngIf="card" class="center">
+    <button (click)="track()" mat-raised-button color="accent">Start Tracking</button>    
+</section>
