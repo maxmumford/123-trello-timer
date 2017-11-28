@@ -25,15 +25,14 @@ export interface TrelloUser {
 
 export interface TrelloBoard {
   id: string,
-  name: string,
-  starred: boolean
+  name: string
 }
 
 export interface TrelloCard {
   id: string,
   name: string,
-  desc: string,
-  idBoard: string
+  desc?: string,
+  idBoard?: string
 }
 
 @Injectable()
@@ -102,20 +101,20 @@ export class TrelloService implements Resolve<TrelloAuthPayload> {
     return this.http.get<TrelloUser>(this.addAuthSuffix(`https://api.trello.com/1/members/me`))
   }
   
-  getBoards(userId: string){
-    return this.http.get<TrelloBoard[]>(this.addAuthSuffix(`https://api.trello.com/1/members/${userId}/boards`))
+  getBoards(idUser: string){
+    return this.http.get<TrelloBoard[]>(this.addAuthSuffix(`https://api.trello.com/1/members/${idUser}/boards`))
   }
   
-  getBoard(boardId: string){
-    return this.http.get<TrelloBoard>(this.addAuthSuffix(`https://api.trello.com/1/boards/${boardId}`))
+  getBoard(idBoard: string){
+    return this.http.get<TrelloBoard>(this.addAuthSuffix(`https://api.trello.com/1/boards/${idBoard}`))
   }
   
-  getCards(boardId: string){
-    return this.http.get<TrelloCard[]>(this.addAuthSuffix(`https://api.trello.com/1/boards/${boardId}/cards`))
+  getCards(idBoard: string){
+    return this.http.get<TrelloCard[]>(this.addAuthSuffix(`https://api.trello.com/1/boards/${idBoard}/cards`))
   }
   
-  getCard(cardId: string){
-    return this.http.get<TrelloCard>(this.addAuthSuffix(`https://api.trello.com/1/cards/${cardId}`))
+  getCard(idCard: string){
+    return this.http.get<TrelloCard>(this.addAuthSuffix(`https://api.trello.com/1/cards/${idCard}`))
   }
 
   private addAuthSuffix(url, noExistingQueryString = true){

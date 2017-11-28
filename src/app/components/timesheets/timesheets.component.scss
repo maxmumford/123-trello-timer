@@ -1,0 +1,26 @@
+section {
+  overflow: hidden;
+  padding: 16px;
+}
+
+.selected {
+  background-color: rgb(247, 247, 247);
+}
+
+mat-checkbox {
+  float: right;
+  margin: 12px 12px 0px 0px;
+}
+
+.fab-container {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+
+  .small {
+    transform: scale(0.7);
+  }
+}

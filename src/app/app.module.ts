@@ -9,7 +9,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatTooltipModule,
-    MatMenuModule, MatFormFieldModule, MatInputModule, MatSnackBarModule} from '@angular/material';
+    MatMenuModule, MatFormFieldModule, MatInputModule, MatSnackBarModule, MatCardModule,
+    MatCheckboxModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AngularFireModule } from 'angularfire2';
@@ -27,12 +28,16 @@ import { AppComponent } from './app.component';
 import { TrackComponent } from 'app/components/track/track.component';
 import { LoginComponent } from 'app/components/auth/login.component';
 import { TrackService } from 'app/services/track.service';
+import { CardsComponent } from 'app/components/card/cards.component';
+import { TimesheetsComponent } from 'app/components/timesheets/timesheets.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TrackComponent,
-    LoginComponent
+    LoginComponent,
+    CardsComponent,
+    TimesheetsComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +61,9 @@ import { TrackService } from 'app/services/track.service';
     MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCardModule,
+    MatCheckboxModule
   ],
   providers: [
     ElectronService,

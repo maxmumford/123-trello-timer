@@ -1,4 +1,6 @@
-<div class="track-container">
+<div *ngIf="loading">Loading...</div>
+
+<div *ngIf="!loading" class="track-container">
   <section *ngIf="boards">
     <mat-nav-list *ngFor="let board of boards">
       <a mat-list-item (click)="selectBoard(board)" [class.selected]="trackService.selectedBoard && trackService.selectedBoard.id == board.id">
@@ -19,13 +21,9 @@
       </a>
     </mat-nav-list>
   </section>
-    
 
-  <section *ngIf="cards">
-    <mat-nav-list *ngFor="let card of cards">
-      <a mat-list-item (click)="selectCard(card)" [class.selected]="trackService.selectedCard && trackService.selectedCard.id == card.id">
-        <div>{{ card.name }}</div>
-      </a>
-    </mat-nav-list>
-  </section>
+  <timey-cards [boardChanged]="boardChanged" *ngIf="viewMode == 'timer' && trackService.selectedBoard"></timey-cards>
+  
+  <timey-timesheets *ngIf="viewMode == 'timesheets'"></timey-timesheets>
+
 </div>
