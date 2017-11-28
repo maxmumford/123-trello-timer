@@ -5,6 +5,7 @@ import { AuthService } from 'app/services/auth.service';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Helpers } from 'app/helpers';
+import { MatSnackBar } from '@angular/material';
 
 interface TrackDisplay {
   boardName: string
@@ -52,14 +53,17 @@ export class TrackService {
   selectedCard: TrelloCard
 
   tracking: boolean = false
+  trackId: string
   track: TrackDisplay
-  interval
+  intervalUpdateDuration
+  intervalUpdateTrackEndDate
 
   onStopTracking: Subject<TimesheetModel>
 
   constructor(
     private afStore: AngularFirestore,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackbar: MatSnackBar
   ){
     this.onStopTracking = new Subject()
   }
@@ -74,15 +78,18 @@ export class TrackService {
     
     this.tracking = true
     this.updateDuration()
-    this.interval = setInterval(this.updateDuration.bind(this), 1000)
+    this.intervalUpdateDuration = setInterval(this.updateDuration.bind(this), 1000) // every second
+    this.intervalUpdateTrackEndDate = setInterval(this.updateTrackEndDate.bind(this), 1000 * 60) // every minute
   }
 
   /**
    * Stops tracking, then saves a new track in firebase
    */
-  stopTracking(){
+  stopTracking(createOrUpdate = true){
 
-    clearInterval(this.interval)
+    clearInterval(this.intervalUpdateDuration)
+    clearInterval(this.intervalUpdateTrackEndDate)
+
     let timesheet = {
       idBoard: this.selectedBoard.id,
       idCard: this.selectedCard.id,
@@ -91,13 +98,21 @@ export class TrackService {
     }
 
     this.tracking = false
-    this.interval = null
+    this.intervalUpdateDuration = null
+    this.intervalUpdateTrackEndDate = null
     this.track = null
     
-    this.createTimesheet(timesheet).then(done => {
+    if(createOrUpdate){
+      if(!this.trackId){
+        this.createTimesheet(timesheet).then(done => {
+          this.onStopTracking.next(timesheet)
+        })
+      } else {
+        this.updateTimesheetEndDateToNow(this.trackId)
+      }
+    }
 
-      this.onStopTracking.next(timesheet)
-    })
+    this.trackId = null
   }
   
   getTimesheetsForBoard(idBoard: string): Observable<Timesheet[]>{
@@ -175,9 +190,42 @@ export class TrackService {
     })
   }
 
+  updateTimesheetEndDateToNow(id: string){
+    return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${id}`).update({
+      endDate: new Date()
+    })
+  }
+
+  /**
+   * Updates the duration ui string
+   */
   private updateDuration(){
     let seconds = Helpers.secondsBetweenDates(this.track.trackStartDate, new Date())
     this.track.duration = Helpers.secondsToClock(seconds)
+  }
+
+  /**
+   * Updates the ongoing track's end date
+   */
+  private updateTrackEndDate(){
+    if(this.tracking && !this.trackId){
+      this.createTimesheet({
+        idBoard: this.selectedBoard.id,
+        idCard: this.selectedCard.id,
+        startDate: this.track.trackStartDate,
+        endDate: new Date()
+      }).then(track => {
+        this.trackId = track.id
+      })
+    }
+    else if(this.tracking && this.trackId){
+      this.updateTimesheetEndDateToNow(this.trackId).catch(error => {
+        if(error.code == "not-found"){
+          this.stopTracking(false)
+          this.snackbar.open("It looks like you deleted the current timesheet - stopping tracking", null, {duration: 10000, panelClass: "danger"})
+        }
+      })
+    }
   }
 
   private myTimesheets(): AngularFirestoreCollection<TimesheetModel> {

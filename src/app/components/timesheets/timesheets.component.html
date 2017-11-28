@@ -20,7 +20,7 @@
       <button (click)="delete(timesheet)" mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
-      <mat-checkbox (change)="toggleTimesheetSelected(timesheet)"></mat-checkbox>
+      <mat-checkbox [checked]="isSelected(timesheet.id)" (change)="toggleTimesheetSelected(timesheet)"></mat-checkbox>
     </mat-card-actions>
   </mat-card>
 
