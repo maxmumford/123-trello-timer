@@ -36,6 +36,7 @@ import { CardsComponent } from 'app/components/card/cards.component';
 import { TimesheetsComponent } from 'app/components/timesheets/timesheets.component';
 import { TimesheetFormComponent } from 'app/components/timesheets/timesheet-form.component';
 import { TimePickerComponent } from 'app/components/controls/timepicker.component';
+import { TruncatePipe } from 'app/pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TimePickerComponent } from 'app/components/controls/timepicker.componen
     CardsComponent,
     TimesheetsComponent,
     TimesheetFormComponent,
-    TimePickerComponent
+    TimePickerComponent,
+    TruncatePipe
   ],
   entryComponents: [
     TimesheetFormComponent

@@ -145,7 +145,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
     })
     .reduce((prev, current, index) => {
       return prev + current
-    })
+    }, 0)
   }
 
   private updateHourlyRate(){

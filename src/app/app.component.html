@@ -8,8 +8,8 @@
   <span *ngIf="trackService.track" class="track">
     <span class="duration">{{ trackService.track.duration }}</span>
     <div class="text">
-      <span class="board-name">{{ trackService.track.boardName }}</span>
-      <span class="card-name">{{ trackService.track.cardName }}</span>
+      <span class="board-name">{{ trackService.track.boardName | truncate: [30, "..."] }}</span>
+      <span class="card-name">{{ trackService.track.cardName | truncate: [40, "..."] }}</span>
     </div>
   </span>
 
