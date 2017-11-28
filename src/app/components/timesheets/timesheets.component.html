@@ -14,10 +14,10 @@
 
     <!-- actions -->
     <mat-card-actions>
-      <button mat-icon-button color="primary">
+      <button (click)="edit(timesheet)" mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button>
-      <button (click)="delete(timesheet)" mat-icon-button color="warn">
+      <button (click)="delete(timesheet)" mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
       <mat-checkbox (change)="timesheet.selected = !timesheet.selected"></mat-checkbox>

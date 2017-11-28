@@ -1,0 +1,47 @@
+<section>
+
+  <div class="card">
+    <label for="card" class="mat-caption">Trello Card</label>
+    <select [formControl]="card" id="card">
+      <option *ngFor="let card of cards" [value]="card.id">{{ trim(card.name) }}</option>
+    </select>
+  </div>
+
+  <div class="start">
+
+    <!-- start date -->
+    <mat-form-field>
+      <input matInput [formControl]="startDate" [matDatepicker]="startDatePicker" placeholder="Start Date">
+      <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #startDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- start time -->
+    <timey-timepicker [formControl]="startTime"></timey-timepicker>
+    
+  </div>
+
+  <div class="end">
+
+    <!-- end date -->
+    <mat-form-field>
+      <input matInput [formControl]="endDate" [matDatepicker]="endDatePicker" placeholder="End Date">
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- end time -->
+    <timey-timepicker [formControl]="endTime"></timey-timepicker>
+
+  </div>
+
+  <!-- duration -->
+  <h3 class="mat-subheading-2"><strong>Duration:</strong> {{ duration }}</h3>
+
+  <!-- buttons -->
+  <div class="text-right">
+    <button (click)="cancel()" mat-button>Cancel</button>
+    <button (click)="submit()" color="accent" mat-raised-button>Save</button>
+  </div>
+
+</section>

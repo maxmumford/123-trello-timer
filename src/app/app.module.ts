@@ -10,7 +10,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatTooltipModule,
     MatMenuModule, MatFormFieldModule, MatInputModule, MatSnackBarModule, MatCardModule,
-    MatCheckboxModule } from '@angular/material';
+    MatCheckboxModule, 
+    MatDatepickerModule,
+    MatDialogModule,
+    MatNativeDateModule,
+    MatSelectModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AngularFireModule } from 'angularfire2';
@@ -30,6 +34,8 @@ import { LoginComponent } from 'app/components/auth/login.component';
 import { TrackService } from 'app/services/track.service';
 import { CardsComponent } from 'app/components/card/cards.component';
 import { TimesheetsComponent } from 'app/components/timesheets/timesheets.component';
+import { TimesheetFormComponent } from 'app/components/timesheets/timesheet-form.component';
+import { TimePickerComponent } from 'app/components/controls/timepicker.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +43,12 @@ import { TimesheetsComponent } from 'app/components/timesheets/timesheets.compon
     TrackComponent,
     LoginComponent,
     CardsComponent,
-    TimesheetsComponent
+    TimesheetsComponent,
+    TimesheetFormComponent,
+    TimePickerComponent
+  ],
+  entryComponents: [
+    TimesheetFormComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +74,11 @@ import { TimesheetsComponent } from 'app/components/timesheets/timesheets.compon
     MatInputModule,
     MatSnackBarModule,
     MatCardModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule
   ],
   providers: [
     ElectronService,

@@ -4,10 +4,11 @@ import {ActivatedRoute, Router} from "@angular/router"
 import { TrelloService, TrelloUser, TrelloBoard, TrelloCard } from 'app/services/trello.service'
 import { AppComponent } from 'app/app.component';
 import { TrackService, TimesheetModel, Timesheet } from 'app/services/track.service';
-import { MatSelectionList, MatSnackBar } from '@angular/material';
+import { MatSelectionList, MatSnackBar, MatDialog } from '@angular/material';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Subscription } from 'rxjs/Subscription';
+import { TimesheetFormComponent } from 'app/components/timesheets/timesheet-form.component';
 
 @Component({
   selector: 'timey-timesheets',
@@ -26,6 +27,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
   boardChanged: EventEmitter<TrelloBoard>
 
   constructor(
+    private dialog: MatDialog,
     private afStore: AngularFirestore,
     private trackService: TrackService,
     private snackbar: MatSnackBar
@@ -84,7 +86,14 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
     
   }
 
-  delete(timesheet: TimesheetModel){
+  edit(timesheet: Timesheet){
+    this.dialog.open(TimesheetFormComponent, {data: {
+      timesheet,
+      cards: this.cards
+    }})
+  }
+
+  delete(timesheet: Timesheet){
     this.trackService.deleteTimesheet(timesheet.id)
     this.snackbar.open("Timesheet deleted", "Undo").onAction().take(1).subscribe(() => {
       this.trackService.createTimesheet({

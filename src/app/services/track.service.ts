@@ -37,7 +37,7 @@ export class Timesheet implements TimesheetModel {
   }
 
   durationSeconds(){
-    return Math.round((this.endDate.getTime() - this.startDate.getTime()) / 1000)
+    return Helpers.secondsBetweenDates(this.startDate, this.endDate)
   }
 
   durationFriendly(){
@@ -159,15 +159,23 @@ export class TrackService {
   }
 
   createTimesheet(timesheet: TimesheetModel){
-    return this.myTimesheets(timesheet.idBoard, timesheet.idCard).add(timesheet)
+    return this.myTimesheets().add(timesheet)
+  }
+
+  updateTimesheet(timesheet: TimesheetModel){
+    return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${timesheet.id}`).update({
+      idCard: timesheet.idCard,
+      startDate: timesheet.startDate,
+      endDate: timesheet.endDate
+    })
   }
 
   private updateDuration(){
-    let seconds = Math.round(((new Date()).getTime() - this.track.trackStartDate.getTime()) / 1000)
+    let seconds = Helpers.secondsBetweenDates(new Date(), this.track.trackStartDate)
     this.track.duration = Helpers.secondsToClock(seconds)
   }
 
-  private myTimesheets(idBoard: string, idCard: string): AngularFirestoreCollection<TimesheetModel> {
+  private myTimesheets(): AngularFirestoreCollection<TimesheetModel> {
     return this.afStore.collection(`users/${this.authService.user.uid}/timesheets`)
   }
 

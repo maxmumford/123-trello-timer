@@ -1,4 +1,8 @@
-export class Helpers {
+export class Helpers {  
+  
+  public static secondsBetweenDates(start: Date, end: Date): number {
+    return Math.round((end.getTime() - start.getTime()) / 1000)
+  }
 
   public static secondsToClock(seconds){
     let clock = Helpers.secondsToHoursMinutesSeconds(seconds)
