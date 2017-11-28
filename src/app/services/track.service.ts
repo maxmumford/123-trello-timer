@@ -101,7 +101,8 @@ export class TrackService {
   }
   
   getTimesheetsForBoard(idBoard: string): Observable<Timesheet[]>{
-    return this.afStore.collection(`users/${this.authService.user.uid}/timesheets`, ref => ref.where('idBoard', '==', idBoard)).snapshotChanges().map(timesheets => {
+    return this.afStore.collection(`users/${this.authService.user.uid}/timesheets`, ref => ref.where('idBoard', '==', idBoard).orderBy("startDate"))
+        .snapshotChanges().map(timesheets => {
       return timesheets.map(timesheet => {
         return new Timesheet({
           id: timesheet.payload.doc.id,

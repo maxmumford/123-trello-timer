@@ -7,13 +7,17 @@ section {
   background-color: rgb(247, 247, 247);
 }
 
+mat-card {
+  margin-bottom: 16px;
+}
+
 mat-checkbox {
   float: right;
   margin: 12px 12px 0px 0px;
 }
 
 .fab-container {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   right: 0px;
   display: flex;
