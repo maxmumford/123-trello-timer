@@ -25,6 +25,8 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
   cards: TrelloCard[] = []
   totalDurationFriendly: string = ""
   selectedTimesheetIds: string[] = []
+  hourlyRate: number = 45
+  totalAmountFriendly: string = ""
   
   @Input()
   boardChanged: EventEmitter<TrelloBoard>
@@ -43,8 +45,11 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
         this.unsubscribe()
         this.getTimesheets()
         this.timesheets = []
+        this.hourlyRate = this.trackService.selectedBoard.hourlyRate ? this.trackService.selectedBoard.hourlyRate : 45
       })
+      
     this.getTimesheets()
+    this.hourlyRate = this.trackService.selectedBoard.hourlyRate ? this.trackService.selectedBoard.hourlyRate : 45
 
   }
 
@@ -131,16 +136,31 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
     else
       this.selectTimesheet(timesheet.id)
     this.updateTotalDurationFriendly()
+    this.updateTotalAmountFriendly()
   }
-  
-  private updateTotalDurationFriendly(){
-    let seconds = this.timesheetsSelected().map(timesheet => {
+
+  private totalDurationSeconds(){
+    return this.timesheetsSelected().map(timesheet => {
       return timesheet.durationSeconds()
     })
     .reduce((prev, current, index) => {
       return prev + current
     })
+  }
+
+  private updateHourlyRate(){
+    this.updateTotalAmountFriendly()
+    this.trackService.updateBoard(this.trackService.selectedBoard.id, {hourlyRate: this.hourlyRate})
+  }
+  
+  private updateTotalDurationFriendly(){
+    let seconds = this.totalDurationSeconds()
     this.totalDurationFriendly = Helpers.secondsToDurationFriendly(seconds)
+  }
+
+  private updateTotalAmountFriendly(){
+    let seconds = this.totalDurationSeconds()
+    this.totalAmountFriendly = (Math.round((((seconds / 60) / 60) * this.hourlyRate) * 100) / 100).toString()
   }
   
   private getCardNameByCardId(idCard: string){

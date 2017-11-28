@@ -25,7 +25,8 @@ export interface TrelloUser {
 
 export interface TrelloBoard {
   id: string,
-  name: string
+  name: string,
+  hourlyRate?: number
 }
 
 export interface TrelloCard {

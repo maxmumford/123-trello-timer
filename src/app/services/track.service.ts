@@ -125,7 +125,8 @@ export class TrackService {
       return boards.map(board => {
         return {
           id: board.payload.doc.id,
-          name: board.payload.doc.data().name
+          name: board.payload.doc.data().name,
+          hourlyRate: board.payload.doc.data().hourlyRate
         }
       })
     })
@@ -150,6 +151,10 @@ export class TrackService {
     }, {merge: true})
   }
 
+  updateBoard(idBoard: string, data){
+    return this.afStore.doc(`users/${this.authService.user.uid}/boards/${idBoard}`).update(data)
+  }
+
   markTimesheetInvoiced(idTimesheet: string, val: boolean = true){
     return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${idTimesheet}`).update({invoiced: val})
   }
@@ -171,7 +176,7 @@ export class TrackService {
   }
 
   private updateDuration(){
-    let seconds = Helpers.secondsBetweenDates(new Date(), this.track.trackStartDate)
+    let seconds = Helpers.secondsBetweenDates(this.track.trackStartDate, new Date())
     this.track.duration = Helpers.secondsToClock(seconds)
   }
 

@@ -1,5 +1,4 @@
 :host {
-  position: relative;
   padding-bottom: 56px;
 }
 
@@ -23,7 +22,7 @@ mat-checkbox {
 
 .fab-container {
   position: fixed;
-  bottom: 0px;
+  bottom: 39px;
   right: 0px;
   display: flex;
   flex-direction: column;
@@ -38,11 +37,40 @@ mat-checkbox {
 .summary {
   position: fixed;
   bottom: 0px;
-  left: 50%;
+  left: 0px;
   right: 0px;
   padding: 8px;
   background-color: #e3e3e3;
   border-top-left-radius: 5px;
   color: black;
   z-index: 99;
+  display: flex;
+
+  > * {
+    flex: 1;
+  }
+
+  .hourly-rate {
+    span {
+      min-width: 81px;
+      font-weight: bold;
+      
+    }
+
+    input {
+      font-size: 1em;
+      padding: 0px;
+      margin-left: 5px;
+
+      border-top: 1px solid transparent;
+      border-right: none;
+      border-left: none;
+      border-bottom: 1px solid #949494;
+      background-color: transparent;
+      
+      font-size: 1.2em;
+      -webkit-appearance: none;
+      border-radius: 0px;
+    }
+  }
 }

@@ -33,5 +33,14 @@
 </div>
 
 <div *ngIf="showFab()" class="summary mat-body-1">
-  <strong>Total: </strong>{{ totalDurationFriendly }}
+  <div class="text-left">
+    <strong>Duration: </strong>{{ totalDurationFriendly }}
+  </div>
+  <div class="hourly-rate center">
+    <span class="mat-body-1">Hourly Rate</span>
+    <input type="number" min="1" max="500" step="1" [(ngModel)]="hourlyRate" (change)="updateHourlyRate()">
+  </div>
+  <div class="text-right">
+    <strong>Amount: </strong>{{ totalAmountFriendly }}
+  </div>
 </div>
