@@ -1,6 +1,6 @@
 <section *ngIf="timesheetsUninvoiced">
 
-  <mat-card *ngFor="let timesheet of timesheetsUninvoiced" [class.selected]="timesheet.selected">
+  <mat-card *ngFor="let timesheet of timesheetsUninvoiced" [class.selected]="isSelected(timesheet.id)">
 
     <!-- titles -->
     <mat-card-header>
@@ -20,18 +20,18 @@
       <button (click)="delete(timesheet)" mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
-      <mat-checkbox (change)="timesheet.selected = !timesheet.selected"></mat-checkbox>
+      <mat-checkbox (change)="toggleTimesheetSelected(timesheet)"></mat-checkbox>
     </mat-card-actions>
   </mat-card>
 
 </section>
 
 <div *ngIf="showFab()" class="fab-container">
-  <button mat-fab (click)="export()" color="accent" class="small">
-    <mat-icon aria-label="Export as CSV" matTooltip="Export as CSV">import_export</mat-icon>
-  </button>
-  
   <button mat-fab (click)="invoice()" color="primary">
     <mat-icon aria-label="Mark As Invoiced" matTooltip="Mark as invoiced">attach_money</mat-icon>
   </button>
+</div>
+
+<div *ngIf="showFab()" class="summary mat-body-1">
+  <strong>Total: </strong>{{ totalDurationFriendly }}
 </div>

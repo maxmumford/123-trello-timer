@@ -104,8 +104,12 @@ export class TimesheetFormComponent implements OnInit, OnDestroy {
       startDate: this.getStartDateTime(),
       endDate: this.getEndDateTime()
     }).then(() => {
-      this.dialogRef.close()
+      this.snackbar.open("Timesheet updated", null, {duration: 3000})
+    }).catch(error => {
+      this.snackbar.open("Error updating timesheet", null, {duration: 3000, panelClass: "danger"})
     })
+
+    this.dialogRef.close()
   }
 
   cancel(){

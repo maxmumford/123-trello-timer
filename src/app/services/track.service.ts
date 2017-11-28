@@ -150,8 +150,8 @@ export class TrackService {
     }, {merge: true})
   }
 
-  markTimesheetInvoiced(idTimesheet: string){
-    return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${idTimesheet}`).update({invoiced: true})
+  markTimesheetInvoiced(idTimesheet: string, val: boolean = true){
+    return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${idTimesheet}`).update({invoiced: val})
   }
   
   deleteTimesheet(idTimesheet: string){
