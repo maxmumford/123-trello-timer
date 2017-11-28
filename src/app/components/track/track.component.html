@@ -24,6 +24,6 @@
 
   <timey-cards [boardChanged]="boardChanged" *ngIf="viewMode == 'timer' && trackService.selectedBoard"></timey-cards>
   
-  <timey-timesheets *ngIf="viewMode == 'timesheets'"></timey-timesheets>
+  <timey-timesheets [boardChanged]="boardChanged" *ngIf="viewMode == 'timesheets'"></timey-timesheets>
 
 </div>

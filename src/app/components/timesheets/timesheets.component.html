@@ -1,6 +1,6 @@
-<section *ngIf="timesheets">
+<section *ngIf="timesheetsUninvoiced">
 
-  <mat-card *ngFor="let timesheet of timesheets" [class.selected]="timesheet.selected">
+  <mat-card *ngFor="let timesheet of timesheetsUninvoiced" [class.selected]="timesheet.selected">
 
     <!-- titles -->
     <mat-card-header>
@@ -17,10 +17,10 @@
       <button mat-icon-button color="primary">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn">
+      <button (click)="delete(timesheet)" mat-icon-button color="warn">
         <mat-icon>delete</mat-icon>
       </button>
-      <mat-checkbox (click)="timesheet.selected = !timesheet.selected"></mat-checkbox>
+      <mat-checkbox (change)="timesheet.selected = !timesheet.selected"></mat-checkbox>
     </mat-card-actions>
   </mat-card>
 

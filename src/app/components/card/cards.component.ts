@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router"
 import { TrelloService, TrelloUser, TrelloBoard, TrelloCard } from 'app/services/trello.service'
 import { AppComponent } from 'app/app.component';
 import { TrackService } from 'app/services/track.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'timey-cards',
@@ -14,6 +15,7 @@ export class CardsComponent implements OnInit {
 
   cards: TrelloCard[]
   cardsUpdated = false
+  subscription: Subscription
 
   @Input()
   boardChanged: EventEmitter<TrelloBoard>
@@ -27,6 +29,8 @@ export class CardsComponent implements OnInit {
     if(this.boardChanged)
       this.boardChanged.subscribe(() => {
         this.cardsUpdated = false
+        this.subscription.unsubscribe
+        this.subscription = null
         this.getCards()
       })
     this.getCards()
@@ -35,7 +39,7 @@ export class CardsComponent implements OnInit {
   getCards(){
 
     // load cards from firebase
-    this.trackService.getCards(this.trackService.selectedBoard.id).subscribe(cards => {
+    this.subscription = this.trackService.getCards(this.trackService.selectedBoard.id).subscribe(cards => {
       this.cards = cards
 
       if(!this.cardsUpdated){

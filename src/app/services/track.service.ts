@@ -19,6 +19,7 @@ export interface TimesheetModel {
   idCard?: string
   startDate: Date
   endDate: Date
+  invoiced?: boolean
 }
 
 export class Timesheet implements TimesheetModel {
@@ -27,6 +28,7 @@ export class Timesheet implements TimesheetModel {
   idCard: string
   startDate: Date
   endDate: Date
+  invoiced: boolean = false
 
   constructor(data: TimesheetModel){
     Object.keys(data).forEach(key => {
@@ -106,7 +108,8 @@ export class TrackService {
           startDate: timesheet.payload.doc.data().startDate,
           endDate: timesheet.payload.doc.data().endDate,
           idCard: timesheet.payload.doc.data().idCard,
-          idBoard: timesheet.payload.doc.data().idBoard
+          idBoard: timesheet.payload.doc.data().idBoard,
+          invoiced: timesheet.payload.doc.data().invoiced
         })
       })
     })
@@ -146,7 +149,15 @@ export class TrackService {
     }, {merge: true})
   }
 
-  private createTimesheet(timesheet: TimesheetModel){
+  markTimesheetInvoiced(idTimesheet: string){
+    return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${idTimesheet}`).update({invoiced: true})
+  }
+  
+  deleteTimesheet(idTimesheet: string){
+    return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${idTimesheet}`).delete()
+  }
+
+  createTimesheet(timesheet: TimesheetModel){
     return this.myTimesheets(timesheet.idBoard, timesheet.idCard).add(timesheet)
   }
 
