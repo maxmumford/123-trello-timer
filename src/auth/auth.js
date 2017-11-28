@@ -3,7 +3,9 @@ module.exports = {checkToken: checkToken, storeToken: storeToken};
 var remote = require('electron').remote
 const request = require('request')
 const querystring = require('querystring')
+
 const storage = require('electron-json-storage');
+storage.setDataPath(storage.getDefaultDataPath() + "/timey")
 
 const CONSUMER_KEY = 'b4946565adec1d8fe0fe0b8c803bf2bc'
 const CONSUMER_SECRET = 'a9f54fb31e4293037a73734bc9f0262e2ed8e2905c2f57b8c923f9093a6ce29c'
@@ -28,9 +30,9 @@ function checkToken() {
 
       const req_data = querystring.parse(body);
       const token = req_data.oauth_token
-      const tokenSecret = req_data.oauth_token_secret
+      const requestSecret = req_data.oauth_token_secret
 
-      storage.set('token', { token: token, tokenSecret: tokenSecret }, function(error) {
+      storage.set('token', { token: token, requestSecret: requestSecret }, function(error) {
         if (error) throw error;
         document.getElementById('webview').setAttribute("src", AUTHORIZE_TOKEN_URL + token);
       });
@@ -42,9 +44,10 @@ function storeToken(urlQuery, targetWindow) {
   const verify_data = querystring.parse(urlQuery);
 
   storage.get('token', function(error, data) {
+
     if (error) throw error;
     
-    let tokenSecret = data.tokenSecret
+    let tokenSecret = data.requestSecret
     
     const oauth = {
       consumer_key: CONSUMER_KEY,
@@ -56,10 +59,9 @@ function storeToken(urlQuery, targetWindow) {
     
     request.post({url: ACCESS_TOKEN_URL, oauth: oauth}, (e, r, body) => {
       const token_data = querystring.parse(body);
-      console.log("Returned token: ", token_data)
       storage.set('token', { token: token_data.oauth_token, tokenSecret: token_data.oauth_token_secret }, function(error) {
         if (error) throw error;
-        targetWindow.loadURL(`file://${__dirname}/index.html`);
+        else targetWindow.loadURL(`file://${__dirname}/index.html`);
       });
     });
   })

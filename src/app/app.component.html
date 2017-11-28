@@ -1,1 +1,32 @@
+<mat-toolbar color="primary">
+  <mat-icon>access_time</mat-icon>
+  &nbsp;
+  <span>Timey</span>
+  <span class="spacer"></span>
+
+  <!-- tracking status -->
+  <span *ngIf="trackService.track" class="track">
+    <span class="duration">{{ trackService.track.duration }}</span>
+    <div class="text">
+      <span class="board-name">{{ trackService.track.boardName }}</span>
+      <span class="card-name">{{ trackService.track.cardName }}</span>
+    </div>
+  </span>
+
+  <!-- tracking controls -->
+  <button *ngIf="trackService.selectedCard && trackService.selectedCard.id && !trackService.tracking" (click)="trackService.startTracking()" 
+      mat-raised-button color="accent">Start Tracking</button>
+  <button *ngIf="trackService.tracking" (click)="trackService.stopTracking()" mat-raised-button color="accent">Stop Tracking</button>
+
+  <!-- menu icon -->
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon aria-label="Open the menu">more_vert</mat-icon>
+  </button>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="logoutTrello()">Logout from Trello</button>
+    <button mat-menu-item (click)="logoutTimey()">Logout from Timey</button>
+  </mat-menu>
+
+</mat-toolbar>
+
 <router-outlet></router-outlet>

@@ -4,9 +4,12 @@ import {HttpClient} from "@angular/common/http"
 import { Router, Resolve, RouterStateSnapshot,
   ActivatedRouteSnapshot } from '@angular/router';
 
-  import { AuthService } from 'app/services/auth.service';
-  import { ElectronService } from 'app/services/electron.service';
+import { AuthService } from 'app/services/auth.service';
+import { ElectronService } from 'app/services/electron.service';
 
+import * as storage from "electron-json-storage"
+storage.setDataPath(storage.getDefaultDataPath() + "/timey")
+  
 const CONSUMER_KEY = 'b4946565adec1d8fe0fe0b8c803bf2bc'
 
 export interface TrelloAuthPayload  {
@@ -37,6 +40,7 @@ export interface TrelloCard {
 export class TrelloService implements Resolve<TrelloAuthPayload> {
 
   private auth: TrelloAuthPayload
+  private storageKey = "token"
 
   constructor(
     private http: HttpClient,
@@ -55,21 +59,43 @@ export class TrelloService implements Resolve<TrelloAuthPayload> {
       })
     else
       return Observable.create(observer => {
-        this.authService.getTrelloToken(auth => {
-          if(auth && auth.token && auth.tokenSecret){
+        this.getTrelloToken(auth => {
             this.auth = auth
             observer.next(auth)
             observer.complete()
-          } else {
+          }, () => {
             this.auth = null
-            this.authService.removeTrelloToken(() => {
-              this.electron.loadAuthPage()
-              observer.next(null)
-              observer.complete()
-            })
+            this.electron.loadAuthPage()
+            observer.next(null)
+            observer.complete()
           }
-        })
+        )
       })
+  }
+
+  getTrelloToken(
+    success: (auth: TrelloAuthPayload) => void,
+    fail: () => void
+  ){
+    storage.get(this.storageKey, function(error, data) {
+      if (error) throw error;
+      else if(!data || !data.token || !data.tokenSecret)
+        fail()
+      else {
+        let token = data.token
+        let tokenSecret = data.tokenSecret
+        success({token, tokenSecret})
+      }
+    })
+  }
+
+  removeTrelloToken(
+    callback: () => void
+  ){
+    storage.remove(this.storageKey, (error) => {
+      if(error) throw error;
+      else callback()
+    })
   }
 
   getUser(): Observable<TrelloUser> {
