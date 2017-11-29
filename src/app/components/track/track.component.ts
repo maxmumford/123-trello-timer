@@ -59,6 +59,7 @@ export class TrackComponent implements OnInit {
 
   selectBoard(board: TrelloBoard){
     this.trackService.selectedBoard = board
+    this.trackService.selectedCard = null
     this.boardChanged.emit(board)
   }
 

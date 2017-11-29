@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 
-import { ipcRenderer, remote } from 'electron'
+import { ipcRenderer, remote, dialog } from 'electron'
 import * as childProcess from 'child_process'
 
 @Injectable()
@@ -24,6 +24,14 @@ export class ElectronService {
 
   isElectron = () => {
     return window && window.process && window.process.type
+  }
+
+  dialog(title: string, message: string, buttons: string[], callback: (button: number) => void){
+    remote.dialog.showMessageBox({
+      title,
+      message,
+      buttons
+    }, callback);
   }
 
 }

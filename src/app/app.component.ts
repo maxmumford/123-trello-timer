@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router"
 import { ElectronService } from 'app/services/electron.service';
-import { AfkService } from 'app/services/afk.service';
 import { TrackService } from 'app/services/track.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { TrelloService } from 'app/services/trello.service';
@@ -17,7 +16,6 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private electronService: ElectronService,
-    private afkService: AfkService,
     private trackService: TrackService,
     private afAuth: AngularFireAuth,
     private trelloService: TrelloService,

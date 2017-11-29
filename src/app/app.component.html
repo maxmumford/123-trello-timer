@@ -5,11 +5,11 @@
   <span class="spacer"></span>
 
   <!-- tracking status -->
-  <span *ngIf="trackService.track" class="track">
-    <span class="duration">{{ trackService.track.duration }}</span>
-    <div class="text">
-      <span class="board-name">{{ trackService.track.boardName | truncate: [30, "..."] }}</span>
-      <span class="card-name">{{ trackService.track.cardName | truncate: [40, "..."] }}</span>
+  <span class="track">
+    <span *ngIf="trackService.track" class="duration">{{ trackService.track.duration }}</span>
+    <div class="text" *ngIf="trackService.showBoardAndCard()">
+      <span class="board-name">{{ trackService.getBoardName() | truncate: [30, "..."] }}</span>
+      <span class="card-name">{{ trackService.getCardName() | truncate: [40, "..."] }}</span>
     </div>
   </span>
 

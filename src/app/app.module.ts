@@ -25,7 +25,6 @@ import { environment } from 'environments';
 import { AppRoutingModule } from './app-routing.module';
 
 import { ElectronService } from './services/electron.service';
-import { AfkService } from 'app/services/afk.service';
 import { AuthService } from 'app/services/auth.service';
 import { TrelloService } from 'app/services/trello.service';
 import { AppComponent } from './app.component';
@@ -85,7 +84,6 @@ import { TruncatePipe } from 'app/pipes/truncate.pipe';
   providers: [
     ElectronService,
     AuthService,
-    AfkService,
     TrelloService,
     TrackService
   ],

@@ -6,9 +6,14 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { Helpers } from 'app/helpers';
 import { MatSnackBar } from '@angular/material';
+import { ElectronService } from 'app/services/electron.service';
+
+var mouse = require('osx-mouse');
 
 interface TrackDisplay {
-  boardName: string
+  idBoard: string,
+  idCard: string,
+  boardName: string,
   cardName: string
   trackStartDate: Date
   duration: string
@@ -49,6 +54,9 @@ export class Timesheet implements TimesheetModel {
 @Injectable()
 export class TrackService {
 
+  AFK_THESHOLD_SECONDS = 60 * 20 // 20 mins
+  mouseRef
+
   selectedBoard: TrelloBoard
   selectedCard: TrelloCard
 
@@ -60,9 +68,12 @@ export class TrackService {
 
   onStopTracking: Subject<TimesheetModel>
 
+  lastInputDate: Date
+
   constructor(
     private afStore: AngularFirestore,
     private authService: AuthService,
+    private electronService: ElectronService,
     private snackbar: MatSnackBar
   ){
     this.onStopTracking = new Subject()
@@ -70,6 +81,8 @@ export class TrackService {
 
   startTracking(){
     this.track = {
+      idBoard: this.selectedBoard.id,
+      idCard: this.selectedCard.id,
       boardName: this.selectedBoard.name,
       cardName: this.selectedCard.name,
       trackStartDate: new Date(),
@@ -77,6 +90,7 @@ export class TrackService {
     }
     
     this.tracking = true
+    this.startTrackingInput()
     this.updateDuration()
     this.intervalUpdateDuration = setInterval(this.updateDuration.bind(this), 1000) // every second
     this.intervalUpdateTrackEndDate = setInterval(this.updateTrackEndDate.bind(this), 1000 * 60) // every minute
@@ -85,16 +99,17 @@ export class TrackService {
   /**
    * Stops tracking, then saves a new track in firebase
    */
-  stopTracking(createOrUpdate = true){
+  stopTracking(createOrUpdate = true, endDate: Date = new Date()){
 
+    this.stopTrackingInput()
     clearInterval(this.intervalUpdateDuration)
     clearInterval(this.intervalUpdateTrackEndDate)
 
     let timesheet = {
-      idBoard: this.selectedBoard.id,
-      idCard: this.selectedCard.id,
+      idBoard: this.track.idBoard,
+      idCard: this.track.idCard,
       startDate: this.track.trackStartDate,
-      endDate: new Date()
+      endDate
     }
 
     this.tracking = false
@@ -108,11 +123,42 @@ export class TrackService {
           this.onStopTracking.next(timesheet)
         })
       } else {
-        this.updateTimesheetEndDateToNow(this.trackId)
+        this.updateTimesheetEndDate(this.trackId, endDate)
       }
+
+      let secs = Helpers.secondsBetweenDates(timesheet.startDate, timesheet.endDate)
+      let duration = Helpers.secondsToDurationFriendly(secs)
+      this.snackbar.open("Timesheet created for " + duration)
     }
 
     this.trackId = null
+  }
+
+  /**
+   * Each time the user moves their mouse, saves the timestamp for AFK detection
+   */
+  startTrackingInput(){
+    this.lastInputDate = new Date()
+    this.mouseRef = mouse().on('move', function(x, y) {
+      if(this.lastInputDate){
+        let diffSeconds = (new Date().getTime() - this.lastInputDate.getTime()) / 1000.0
+        if(diffSeconds > this.AFK_THESHOLD_SECONDS){
+          let idle = Helpers.secondsToDurationFriendly(diffSeconds)
+          this.electronService.dialog("Record Idle Time?", `You were away from the computer for a while. Do you want to record the last ${idle}?`, 
+              ["Record Idle Time", "Discard Idle Time"], button => {
+                // discard idle time
+                if(button == 1){
+                  this.stopTracking(true, this.lastInputDate)
+                }
+              })
+        }
+      }
+      this.lastInputDate = new Date()
+    }.bind(this))
+  }
+
+  stopTrackingInput(){
+    this.mouseRef.destroy()
   }
   
   getTimesheetsForBoard(idBoard: string): Observable<Timesheet[]>{
@@ -190,11 +236,26 @@ export class TrackService {
     })
   }
 
-  updateTimesheetEndDateToNow(id: string){
+  updateTimesheetEndDate(id: string, endDate = new Date()){
     return this.afStore.doc(`users/${this.authService.user.uid}/timesheets/${id}`).update({
-      endDate: new Date()
+      endDate
     })
   }
+
+  /** ================= DISPLAY FUNCTIONS ===================== */
+  showBoardAndCard(){
+    return this.track || (this.selectedBoard && this.selectedCard)
+  }
+
+  getBoardName(){
+    return this.track ? this.track.boardName : this.selectedBoard.name
+  }
+
+  getCardName(){
+    return this.track ? this.track.cardName : this.selectedCard.name
+  }
+  
+  /** ================= PRIVATE FUNCTIONS ===================== */
 
   /**
    * Updates the duration ui string
@@ -219,7 +280,7 @@ export class TrackService {
       })
     }
     else if(this.tracking && this.trackId){
-      this.updateTimesheetEndDateToNow(this.trackId).catch(error => {
+      this.updateTimesheetEndDate(this.trackId, new Date()).catch(error => {
         if(error.code == "not-found"){
           this.stopTracking(false)
           this.snackbar.open("It looks like you deleted the current timesheet - stopping tracking", null, {duration: 10000, panelClass: "danger"})
