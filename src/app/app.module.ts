@@ -5,7 +5,7 @@ import 'polyfills';
 import 'rxjs/add/operator/take'; 
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatTooltipModule,
@@ -37,6 +37,18 @@ import { TimesheetFormComponent } from 'app/components/timesheets/timesheet-form
 import { TimePickerComponent } from 'app/components/controls/timepicker.component';
 import { TruncatePipe } from 'app/pipes/truncate.pipe';
 import { TrelloComponent } from 'app/components/trello/trello.component';
+
+import * as Raven from 'raven-js';
+
+Raven
+  .config('https://c6d33501e3b4403b92b9d8a84c1b3272@sentry.io/252885')
+  .install();
+
+export class RavenErrorHandler implements ErrorHandler {
+  handleError(err:any) : void {
+    Raven.captureException(err);
+  }
+}
 
 @NgModule({
   declarations: [
@@ -87,7 +99,9 @@ import { TrelloComponent } from 'app/components/trello/trello.component';
     ElectronService,
     AuthService,
     TrelloService,
-    TrackService
+    TrackService,
+
+    { provide: ErrorHandler, useClass: RavenErrorHandler }
   ],
   bootstrap: [AppComponent]
 })

@@ -5,8 +5,8 @@ import { TrelloBoard } from 'app/services/trello.service';
 import { Router } from '@angular/router';
 
 import {remote, BrowserWindow} from "electron"
-import {request} from "request"
-import * as querystring from "querystring"
+let request = require("request")
+let querystring = require('querystring')
 
 const CONSUMER_KEY = 'b4946565adec1d8fe0fe0b8c803bf2bc'
 const CONSUMER_SECRET = 'a9f54fb31e4293037a73734bc9f0262e2ed8e2905c2f57b8c923f9093a6ce29c'

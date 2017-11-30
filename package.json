@@ -58,6 +58,7 @@
     "firebase": "^4.6.2",
     "node-oauth-1.0a": "^3.0.0",
     "osx-mouse": "^1.2.1",
+    "raven-js": "^3.20.1",
     "rxjs": "5.5.2",
     "zone.js": "0.8.17"
   },
