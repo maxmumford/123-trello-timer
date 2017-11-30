@@ -18,10 +18,6 @@ export class ElectronService {
     return remote.getCurrentWindow()
   }
 
-  loadAuthPage(){
-    this.getCurrentWindow().loadURL(`file://${__dirname}/auth.html`)
-  }
-
   isElectron = () => {
     return window && window.process && window.process.type
   }

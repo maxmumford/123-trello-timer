@@ -36,6 +36,7 @@ import { TimesheetsComponent } from 'app/components/timesheets/timesheets.compon
 import { TimesheetFormComponent } from 'app/components/timesheets/timesheet-form.component';
 import { TimePickerComponent } from 'app/components/controls/timepicker.component';
 import { TruncatePipe } from 'app/pipes/truncate.pipe';
+import { TrelloComponent } from 'app/components/trello/trello.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { TruncatePipe } from 'app/pipes/truncate.pipe';
     TimesheetsComponent,
     TimesheetFormComponent,
     TimePickerComponent,
+    TrelloComponent,
     TruncatePipe
   ],
   entryComponents: [

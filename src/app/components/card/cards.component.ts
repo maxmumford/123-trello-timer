@@ -5,13 +5,14 @@ import { TrelloService, TrelloUser, TrelloBoard, TrelloCard } from 'app/services
 import { AppComponent } from 'app/app.component';
 import { TrackService } from 'app/services/track.service';
 import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'timey-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss']
 })
-export class CardsComponent implements OnInit {
+export class CardsComponent implements OnInit, OnDestroy {
 
   cards: TrelloCard[]
   cardsUpdated = false
@@ -34,6 +35,10 @@ export class CardsComponent implements OnInit {
         this.getCards()
       })
     this.getCards()
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe()
   }
 
   getCards(){

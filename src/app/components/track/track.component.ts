@@ -6,13 +6,14 @@ import { AppComponent } from 'app/app.component';
 import { TrackService } from 'app/services/track.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'timey-track',
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss']
 })
-export class TrackComponent implements OnInit {
+export class TrackComponent implements OnInit, OnDestroy {
 
   user: TrelloUser
   boards: TrelloBoard[]
@@ -55,6 +56,10 @@ export class TrackComponent implements OnInit {
       }
     })
 
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe()
   }
 
   selectBoard(board: TrelloBoard){

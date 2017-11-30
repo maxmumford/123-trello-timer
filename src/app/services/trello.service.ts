@@ -41,11 +41,15 @@ export interface TrelloCard {
 @Injectable()
 export class TrelloService implements Resolve<TrelloAuthPayload> {
 
+  private LS_TOKEN_SECRET = "tokenSecret"
+  private LS_TOKEN = "token"
+
   private auth: TrelloAuthPayload
   private storageKey = "token"
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private electron: ElectronService,
     private authService: AuthService
   ){}
@@ -53,51 +57,35 @@ export class TrelloService implements Resolve<TrelloAuthPayload> {
   /**
    * Prelaod and cache trello authentication token. If not found, load authentication flow
    */
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<TrelloAuthPayload> {
-    if(this.auth != null && this.auth.token && this.auth.tokenSecret)
-      return Observable.create(observer => {
-        observer.next(this.auth)
-        observer.complete()
-      })
-    else
-      return Observable.create(observer => {
-        this.getTrelloToken(auth => {
-            this.auth = auth
-            observer.next(auth)
-            observer.complete()
-          }, () => {
-            this.auth = null
-            this.electron.loadAuthPage()
-            observer.next(null)
-            observer.complete()
-          }
-        )
-      })
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): TrelloAuthPayload {
+    if(this.hasTrelloToken())
+      return this.auth
+    else {
+      this.auth = null
+      this.router.navigate(['trello'])
+      return null
+    }
   }
 
-  getTrelloToken(
-    success: (auth: TrelloAuthPayload) => void,
-    fail: () => void
-  ){
-    storage.get(this.storageKey, function(error, data) {
-      if (error) throw error;
-      else if(!data || !data.token || !data.tokenSecret)
-        fail()
-      else {
-        let token = data.token
-        let tokenSecret = data.tokenSecret
-        success({token, tokenSecret})
-      }
-    })
+  hasTrelloToken(){
+    this.auth = this.getTrelloToken()
+    return this.auth && this.auth.token && this.auth.tokenSecret
   }
 
-  removeTrelloToken(
-    callback: () => void
-  ){
-    storage.remove(this.storageKey, (error) => {
-      if(error) throw error;
-      else callback()
-    })
+  getTrelloToken(): TrelloAuthPayload {
+    return {
+      token: localStorage.getItem(this.LS_TOKEN),
+      tokenSecret: localStorage.getItem(this.LS_TOKEN_SECRET)
+    }
+  }
+
+  removeTrelloToken(){
+    localStorage.removeItem(this.LS_TOKEN)
+    localStorage.removeItem(this.LS_TOKEN_SECRET)
+  }
+
+  goToLoginPage(){
+    this.router.navigate(['trello'])
   }
 
   getUser(): Observable<TrelloUser> {

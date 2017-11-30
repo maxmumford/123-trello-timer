@@ -12,8 +12,6 @@ if (serve) {
   });
 }
 
-protocol.registerStandardSchemes(['timeyauth'])
-
 function createWindow() {
 
   const electronScreen = screen;
@@ -30,19 +28,12 @@ function createWindow() {
   console.log(path.join(__dirname, '../logo.ico'))
 
   // and load the index.html of the app.
-  win.loadURL('file://' + __dirname + '/auth.html');
+  win.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
   if (serve) {
     win.webContents.openDevTools();
   }
-
-  // handle auth protocol
-  protocol.registerStringProtocol('timeyauth', (req, callback) => {
-    if (url.parse(req.url).host === 'storetoken'){
-      require('./auth.js').storeToken(url.parse(req.url).query, win);
-    }
-  });
 
   // Emitted when the window is closed.
   win.on('closed', () => {

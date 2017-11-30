@@ -30,15 +30,18 @@ export class AppComponent implements OnInit {
   ngOnInit(){}
 
   logoutTrello(){
-    this.trelloService.removeTrelloToken(() => {
-      this.electronService.loadAuthPage()
-    })
+    this.trelloService.removeTrelloToken()
+    this.trelloService.goToLoginPage()
   }
 
   logoutTimey(){
     this.afAuth.auth.signOut().then(response => {
       this.router.navigate(['login'])
     }) 
+  }
+
+  trelloAuth(){
+    this.router.navigate(['trello'])
   }
   
 }

@@ -24,7 +24,7 @@
     "lint": "ng lint",
     "start": "npm-run-all --parallel webpack:watch electron:serve",
     "webpack:watch": "webpack --watch",
-    "build:electron:main": "tsc main.ts --outDir dist && copyfiles package.json dist && cp src/auth/* dist && cd dist && npm install --prod && cd ..",
+    "build:electron:main": "tsc main.ts --outDir dist && copyfiles package.json dist && cd dist && npm install --prod && cd ..",
     "build": "webpack --display-error-details && npm run build:electron:main",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "electron:serve": "npm run build:electron:main && electron ./dist --serve",
@@ -56,6 +56,7 @@
     "electron-json-storage": "^4.0.2",
     "enhanced-resolve": "3.3.0",
     "firebase": "^4.6.2",
+    "node-oauth-1.0a": "^3.0.0",
     "osx-mouse": "^1.2.1",
     "rxjs": "5.5.2",
     "zone.js": "0.8.17"
