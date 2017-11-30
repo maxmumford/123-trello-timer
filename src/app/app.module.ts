@@ -59,7 +59,7 @@ import { TruncatePipe } from 'app/pipes/truncate.pipe';
     AppRoutingModule,
 
     // firebase
-    AngularFireModule.initializeApp(environment.firebase, "Timey"),    
+    AngularFireModule.initializeApp(environment.firebase, "123 Trello Timer"),    
     AngularFireAuthModule,
     AngularFirestoreModule,
 
