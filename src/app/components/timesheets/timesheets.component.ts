@@ -85,7 +85,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
     })
 
     Promise.all(promises).then(() => {
-      this.snackbar.open("Invoices marked as invoiced", "Undo", {duration: 3000}).onAction().subscribe(() => {
+      this.snackbar.open("Timesheets marked as invoiced", "Undo", {duration: 3000}).onAction().subscribe(() => {
         timesheetIds.forEach(id => {
           promises.push(this.trackService.markTimesheetInvoiced(id, false))
         })

@@ -24,11 +24,13 @@ function createWindow() {
     x: 0,
     y: 0,
     width: 630,
-    height: 800
+    height: 800,
+    icon: path.join(__dirname, '../logo.ico')
   });
+  console.log(path.join(__dirname, '../logo.ico'))
 
   // and load the index.html of the app.
-  win.loadURL('file://' + __dirname + '/src/auth/index.html');
+  win.loadURL('file://' + __dirname + '/auth.html');
 
   // Open the DevTools.
   if (serve) {
@@ -38,7 +40,7 @@ function createWindow() {
   // handle auth protocol
   protocol.registerStringProtocol('timeyauth', (req, callback) => {
     if (url.parse(req.url).host === 'storetoken'){
-      require('./src/auth/auth.js').storeToken(url.parse(req.url).query, win);
+      require('./auth.js').storeToken(url.parse(req.url).query, win);
     }
   });
 

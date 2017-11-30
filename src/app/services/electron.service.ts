@@ -19,7 +19,7 @@ export class ElectronService {
   }
 
   loadAuthPage(){
-    this.getCurrentWindow().loadURL(`file://${__dirname}/src/auth/index.html`)
+    this.getCurrentWindow().loadURL(`file://${__dirname}/auth.html`)
   }
 
   isElectron = () => {

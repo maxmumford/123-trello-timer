@@ -6,11 +6,78 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
+// CUSTOM COLOURS
+$app-purple: (
+  50: #63345b,
+  100: #63345b,
+  200: #63345b,
+  300: #63345b,
+  400: #63345b,
+  500: #63345b,
+  600: #63345b,
+  700: #63345b,
+  800: #63345b,
+  900: #63345b,
+  A100: #63345b,
+  A200: #63345b,
+  A400: #63345b,
+  A700: #63345b,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$app-yellow: (
+  50: #fcb933,
+  100: #fcb933,
+  200: #fcb933,
+  300: #fcb933,
+  400: #fcb933,
+  500: #fcb933,
+  600: #fcb933,
+  700: #fcb933,
+  800: #fcb933,
+  900: #fcb933,
+  A100: #fcb933,
+  A200: #fcb933,
+  A400: #fcb933,
+  A700: #fcb933,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$timey-primary: mat-palette($mat-indigo);
-$timey-accent:  mat-palette($mat-pink, A200, A100, A400);
+$timey-primary: mat-palette($app-purple);
+$timey-accent:  mat-palette($app-yellow);
 
 // The warn palette is optional (defaults to red).
 $timey-warn:    mat-palette($mat-red);

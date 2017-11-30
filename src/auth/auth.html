@@ -8,8 +8,13 @@
     <webview id="webview" src="data:text/html,<h3>Contacting Trello...</h3>"
       style="position:absolute;width:100%;height:100%;"></webview>
 
+    <script src="./auth.js"></script>
     <script>
-      require('./auth.js').checkToken()
+      checkToken();
+    </script>
+
+    <script>
+      // require('./auth.js').checkToken();
     </script>
   </body>
 </html>

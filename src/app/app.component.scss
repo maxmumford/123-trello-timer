@@ -1,3 +1,19 @@
+mat-toolbar {
+  position: fixed;
+  z-index: 101;
+}
+
+.spacer {
+  height: 64px;
+}
+
+.logo {
+  max-height: 146%;
+  margin-left: -49px;
+  transform: rotate(30deg);
+  margin-top: -12px;
+}
+
 .track {
   display: inline-block;
   margin-right: 16px;
