@@ -85,7 +85,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
     })
 
     Promise.all(promises).then(() => {
-      this.snackbar.open("Invoices marked as invoiced", "Undo").onAction().subscribe(() => {
+      this.snackbar.open("Invoices marked as invoiced", "Undo", {duration: 3000}).onAction().subscribe(() => {
         timesheetIds.forEach(id => {
           promises.push(this.trackService.markTimesheetInvoiced(id, false))
         })
@@ -104,7 +104,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
 
   delete(timesheet: Timesheet){
     this.trackService.deleteTimesheet(timesheet.id)
-    this.snackbar.open("Timesheet deleted", "Undo").onAction().take(1).subscribe(() => {
+    this.snackbar.open("Timesheet deleted", "Undo", {duration: 8000}).onAction().take(1).subscribe(() => {
       this.trackService.createTimesheet({
         id: timesheet.id,
         idBoard: timesheet.idBoard,

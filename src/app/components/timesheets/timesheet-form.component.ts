@@ -96,7 +96,7 @@ export class TimesheetFormComponent implements OnInit, OnDestroy {
       throw "No ID for timesheet!"
     
     if(Helpers.secondsBetweenDates(this.getStartDateTime(), this.getEndDateTime()) < 0)
-      return this.snackbar.open("Make sure your start date is before your end date", null, {panelClass: "danger"})
+      return this.snackbar.open("Make sure your start date is before your end date", null, {panelClass: "danger", duration: 5000})
 
     this.trackService.updateTimesheet({
       id: this.timesheet.id,

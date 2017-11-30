@@ -24,9 +24,11 @@ export interface TrelloUser {
 }
 
 export interface TrelloBoard {
-  id: string,
+  id?: string,
   name: string,
-  hourlyRate?: number
+  hourlyRate?: number,
+  backgroundImage: string,
+  starred: boolean
 }
 
 export interface TrelloCard {

@@ -34,7 +34,7 @@ export class TrackComponent implements OnInit {
 
     // load and display boards from firebase
     this.subscription = this.trackService.getBoards().subscribe(boards => {
-      this.boards = boards
+      this.boards = boards.sort(this.sortByStarredThenName)
       
       // now load boards from trello and create or update boards that are missing in firebase. this.boards list will update automatically.
       if(!this.boardsUpdated){
@@ -47,8 +47,8 @@ export class TrackComponent implements OnInit {
     
             boardsTrello.forEach(boardTrello => {
               let boardFirebase = this.findBoardById(boardTrello.id)
-              if(boardFirebase == null || boardFirebase.name != boardTrello.name)
-                this.trackService.createUpdateBoard(boardTrello.id, boardTrello.name)
+              if(this.trackService.isTrelloBoardDifferentFromFirebaseBoard(boardTrello, boardFirebase))
+                this.trackService.createUpdateBoard(boardTrello.id, this.trackService.extractTrelloBoard(boardTrello))
             })
           })
         })
@@ -84,6 +84,13 @@ export class TrackComponent implements OnInit {
         return board
     }
     return null
+  }
+
+  private sortByStarredThenName(a: TrelloBoard, b: TrelloBoard){
+    if(a.starred == b.starred)
+      return (a.name < b.name) ? -1 : 1;
+    else
+      return (a.starred) ? -1 : 1;
   }
 
 }

@@ -128,7 +128,7 @@ export class TrackService {
 
       let secs = Helpers.secondsBetweenDates(timesheet.startDate, timesheet.endDate)
       let duration = Helpers.secondsToDurationFriendly(secs)
-      this.snackbar.open("Timesheet created for " + duration)
+      this.snackbar.open("Timesheet created for " + duration, null, {duration: 3000})
     }
 
     this.trackId = null
@@ -177,8 +177,13 @@ export class TrackService {
     })
   }
 
-  createUpdateBoard(id: string, name: string){
-    return this.afStore.doc(`users/${this.authService.user.uid}/boards/${id}`).set({name}, {merge: true})
+  createUpdateBoard(id: string, data: any){
+    let d = {}
+    Object.keys(data).forEach(key => {
+      if(data[key] != undefined)
+        d[key] = data[key]
+    })
+    return this.afStore.doc(`users/${this.authService.user.uid}/boards/${id}`).set(d, {merge: true})
   }
 
   getBoards(): Observable<TrelloBoard[]>{
@@ -187,14 +192,26 @@ export class TrackService {
         return {
           id: board.payload.doc.id,
           name: board.payload.doc.data().name,
-          hourlyRate: board.payload.doc.data().hourlyRate
+          hourlyRate: board.payload.doc.data().hourlyRate,
+          backgroundImage: board.payload.doc.data().backgroundImage,
+          starred: board.payload.doc.data().starred
         }
       })
     })
   }
 
+  extractTrelloBoard(trelloBoardData: any): TrelloBoard {
+    return {
+      name: trelloBoardData.name,
+      hourlyRate: trelloBoardData.hourlyRate,
+      backgroundImage: this.getBackgroundImageUrlFromTrelloBoard(trelloBoardData),
+      starred: trelloBoardData.starred ? trelloBoardData.starred : false 
+    }
+  }
+
   getCards(idBoard: string): Observable<TrelloCard[]>{
-    return this.afStore.collection(`users/${this.authService.user.uid}/cards/`, ref => ref.where('idBoard', '==', idBoard)).snapshotChanges().map(cards => {
+    return this.afStore.collection(`users/${this.authService.user.uid}/cards/`, ref => ref.where('idBoard', '==', idBoard).orderBy("name"))
+        .snapshotChanges().map(cards => {
       return cards.map(board => {
         return {
           id: board.payload.doc.id,
@@ -242,6 +259,13 @@ export class TrackService {
     })
   }
 
+  isTrelloBoardDifferentFromFirebaseBoard(trelloBoardData: any, firebaseBoard: TrelloBoard){
+    return firebaseBoard == null
+        || trelloBoardData.name != firebaseBoard.name
+        || this.getBackgroundImageUrlFromTrelloBoard(trelloBoardData) != firebaseBoard.backgroundImage
+        || trelloBoardData.starred != firebaseBoard.starred
+  }
+
   /** ================= DISPLAY FUNCTIONS ===================== */
   showBoardAndCard(){
     return this.track || (this.selectedBoard && this.selectedCard)
@@ -256,6 +280,13 @@ export class TrackService {
   }
   
   /** ================= PRIVATE FUNCTIONS ===================== */
+
+  private getBackgroundImageUrlFromTrelloBoard(boardData): string{
+    return boardData.prefs 
+        && boardData.prefs.backgroundImageScaled 
+        && boardData.prefs.backgroundImageScaled.length 
+        ? boardData.prefs.backgroundImageScaled[0].url : null
+  }
 
   /**
    * Updates the duration ui string
@@ -283,7 +314,7 @@ export class TrackService {
       this.updateTimesheetEndDate(this.trackId, new Date()).catch(error => {
         if(error.code == "not-found"){
           this.stopTracking(false)
-          this.snackbar.open("It looks like you deleted the current timesheet - stopping tracking", null, {duration: 10000, panelClass: "danger"})
+          this.snackbar.open("It looks like you deleted the current timesheet - stopping tracking", null, {duration: 8000, panelClass: "danger"})
         }
       })
     }
