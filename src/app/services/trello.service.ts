@@ -9,13 +9,6 @@ import { ElectronService } from 'app/services/electron.service';
 
 import * as storage from "electron-json-storage"
 storage.setDataPath(storage.getDefaultDataPath() + "/timey")
-  
-const CONSUMER_KEY = 'b4946565adec1d8fe0fe0b8c803bf2bc'
-
-export interface TrelloAuthPayload  {
-  token: string
-  tokenSecret: string
-}
 
 export interface TrelloUser {
   id: string,
@@ -39,13 +32,14 @@ export interface TrelloCard {
 }
 
 @Injectable()
-export class TrelloService implements Resolve<TrelloAuthPayload> {
+export class TrelloService implements Resolve<string> {
 
-  private LS_TOKEN_SECRET = "tokenSecret"
-  private LS_TOKEN = "token"
+  private static CONSUMER_KEY = 'b4946565adec1d8fe0fe0b8c803bf2bc'
+  public static AUTH_URL = `https://trello.com/1/authorize?response_type=token&key=${TrelloService.CONSUMER_KEY}`
+        + `&redirect_uri=file://${__dirname}/index.html&callback_method=fragment&scope=read&expiration=never&name=123%20Trello%20Timer`
+  public static LS_TOKEN = "token"
 
-  private auth: TrelloAuthPayload
-  private storageKey = "token"
+  private token: string
 
   constructor(
     private http: HttpClient,
@@ -57,31 +51,31 @@ export class TrelloService implements Resolve<TrelloAuthPayload> {
   /**
    * Prelaod and cache trello authentication token. If not found, load authentication flow
    */
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): TrelloAuthPayload {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): string {
     if(this.hasTrelloToken())
-      return this.auth
+      return this.token
     else {
-      this.auth = null
+      this.token = null
       this.router.navigate(['trello'])
       return null
     }
   }
 
   hasTrelloToken(){
-    this.auth = this.getTrelloToken()
-    return this.auth && this.auth.token && this.auth.tokenSecret
+    this.token = this.getTrelloToken()
+    return this.token
   }
 
-  getTrelloToken(): TrelloAuthPayload {
-    return {
-      token: localStorage.getItem(this.LS_TOKEN),
-      tokenSecret: localStorage.getItem(this.LS_TOKEN_SECRET)
-    }
+  getTrelloToken(): string {
+    return localStorage.getItem(TrelloService.LS_TOKEN)
+  }
+
+  setToken(token: string){
+    localStorage.setItem(TrelloService.LS_TOKEN, token)
   }
 
   removeTrelloToken(){
-    localStorage.removeItem(this.LS_TOKEN)
-    localStorage.removeItem(this.LS_TOKEN_SECRET)
+    localStorage.removeItem(TrelloService.LS_TOKEN)
   }
 
   goToLoginPage(){
@@ -110,9 +104,9 @@ export class TrelloService implements Resolve<TrelloAuthPayload> {
 
   private addAuthSuffix(url, noExistingQueryString = true){
     if(noExistingQueryString)
-      return url + `?key=${CONSUMER_KEY}&token=${this.auth.token}`
+      return url + `?key=${TrelloService.CONSUMER_KEY}&token=${this.token}`
     else
-      return url + `&key=${CONSUMER_KEY}&token=${this.auth.token}`
+      return url + `&key=${TrelloService.CONSUMER_KEY}&token=${this.token}`
   }
   
 }

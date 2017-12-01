@@ -1,19 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { dirname } from 'path';
 import { HttpClient } from '@angular/common/http';
-import { TrelloBoard } from 'app/services/trello.service';
+import { TrelloBoard, TrelloService } from 'app/services/trello.service';
 import { Router } from '@angular/router';
 
 import {remote, BrowserWindow} from "electron"
-let request = require("request")
-let querystring = require('querystring')
-
-const CONSUMER_KEY = 'b4946565adec1d8fe0fe0b8c803bf2bc'
-const CONSUMER_SECRET = 'a9f54fb31e4293037a73734bc9f0262e2ed8e2905c2f57b8c923f9093a6ce29c'
-
-const REQUEST_TOKEN_URL = 'https://trello.com/1/OAuthGetRequestToken?oauth_callback=file://' + __dirname + '/index.html'
-const AUTHORIZE_TOKEN_URL = 'https://trello.com/1/OAuthAuthorizeToken?name=Timey&scope=read&expiration=never&oauth_token='
-const ACCESS_TOKEN_URL = 'https://trello.com/1/OAuthGetAccessToken'
+import * as querystring from "querystring"
 
 @Component({
   selector: 'timey-trello',
@@ -22,16 +14,13 @@ const ACCESS_TOKEN_URL = 'https://trello.com/1/OAuthGetAccessToken'
 })
 export class TrelloComponent implements OnInit {
   
-  oauth = {
-    consumer_key: CONSUMER_KEY, 
-    consumer_secret: CONSUMER_SECRET
-  }
   requestSecret: string
   trelloWindow: Electron.BrowserWindow
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private trelloService: TrelloService
   ) {}
 
   ngOnInit(){
@@ -40,62 +29,30 @@ export class TrelloComponent implements OnInit {
     let tokenSecret = localStorage.getItem("tokenSecret")
 
     if(!token && !tokenSecret)
-      this.getRequestToken()
+      this.getRequestToken2()
     else
       this.router.navigate(['/'])
   }
 
-  getRequestToken(){
+  getRequestToken2(){
     
-    request.post({
-      url: REQUEST_TOKEN_URL, 
-      oauth: this.oauth
-    }, (e, r, body) => {
-
-      const req_data = querystring.parse(body)
-      const token = req_data.oauth_token
-      this.requestSecret = req_data.oauth_token_secret
-
-      this.authorizeToken(token)
-    })
-  }
-
-  authorizeToken(token: string){
-      
-    this.trelloWindow = new remote.BrowserWindow({width: 800, height: 800})
+    // open window without node integration so jquery attaches itself to window on loaded trello pages
+    this.trelloWindow = new remote.BrowserWindow({width: 800, height: 800, webPreferences: {nodeIntegration: false}})
     
     this.trelloWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-      let params = querystring.parse(newUrl.split("?")[1])
-      this.getAccessToken(params.oauth_token, params.oauth_verifier)
+      
+      // on redirect, check if we're going to a local file, and extract the token from the requested url, cache it and close the window
+      // navigate back to home page
+      if(new URL(newUrl).protocol == "file:"){
+        let token = newUrl.split("token=")[1]
+        this.trelloService.setToken(token)
+        this.trelloWindow.close()
+        this.router.navigate(['/'])
+      }
+
     }.bind(this))
 
-    this.trelloWindow.loadURL(AUTHORIZE_TOKEN_URL + token)
+    this.trelloWindow.loadURL(TrelloService.AUTH_URL)
   }
 
-  getAccessToken(token: string, verifier: string){
-    
-    const oauth = {
-      consumer_key: CONSUMER_KEY,
-      consumer_secret: CONSUMER_SECRET,
-      token: token,
-      token_secret: this.requestSecret,
-      verifier: verifier,
-    };
-    
-    request.post({
-      url: ACCESS_TOKEN_URL, 
-      oauth: oauth
-    }, (e, r, body) => {
-
-      const tokenData = querystring.parse(body)
-      
-      localStorage.setItem("token", tokenData.oauth_token)
-      localStorage.setItem("tokenSecret", tokenData.oauth_token_secret)
-
-      this.trelloWindow.close()
-
-      this.router.navigate(['/'])
-    })
-  }
-  
 }
