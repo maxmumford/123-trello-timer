@@ -22,6 +22,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   subscription: Subscription
   boardsUpdated = false
 
+  loading = true
   viewMode: "timer" | "timesheets" = "timer"
 
   constructor(
@@ -36,6 +37,7 @@ export class TrackComponent implements OnInit, OnDestroy {
     // load and display boards from firebase
     this.subscription = this.trackService.getBoards().subscribe(boards => {
       this.boards = boards.sort(this.sortByStarredThenName)
+      this.loading = false
       
       // now load boards from trello and create or update boards that are missing in firebase. this.boards list will update automatically.
       if(!this.boardsUpdated){

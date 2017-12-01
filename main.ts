@@ -23,9 +23,8 @@ function createWindow() {
     y: 0,
     width: 630,
     height: 800,
-    icon: path.join(__dirname, '../logo.ico')
+    icon: path.join(__dirname, '../icon.ico')
   });
-  console.log(path.join(__dirname, '../logo.ico'))
 
   // and load the index.html of the app.
   win.loadURL('file://' + __dirname + '/index.html');

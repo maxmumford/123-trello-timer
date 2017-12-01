@@ -39,6 +39,7 @@ import { TruncatePipe } from 'app/pipes/truncate.pipe';
 import { TrelloComponent } from 'app/components/trello/trello.component';
 
 import * as Raven from 'raven-js';
+import { LoadingComponent } from 'app/components/elements/loading.component';
 
 Raven		
   .config('https://c6d33501e3b4403b92b9d8a84c1b3272@sentry.io/252885')		
@@ -61,6 +62,7 @@ export class TrelloTimerErrorHandler implements ErrorHandler {
     TimesheetFormComponent,
     TimePickerComponent,
     TrelloComponent,
+    LoadingComponent,
     TruncatePipe
   ],
   entryComponents: [

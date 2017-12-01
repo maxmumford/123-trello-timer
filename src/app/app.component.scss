@@ -12,6 +12,12 @@ mat-toolbar {
   margin-left: -49px;
   transform: rotate(30deg);
   margin-top: -12px;
+  transition: margin 250ms;
+
+  &:hover {
+    margin-top: -8px;
+    margin-left: -35px;
+  }
 }
 
 .track {
