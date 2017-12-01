@@ -40,14 +40,14 @@
     "pree2e": "webdriver-manager update --standalone false --gecko false --quiet && npm run build",
     "e2e": "protractor ./protractor.conf.js",
 
-    "pack": "electron-builder --dir .",
-    "dist": "electron-builder",
+    "pack": "npm run build; electron-builder --dir .",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "io.cocept.123-trello-timer",
     "mac": {
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "type": "distribution"
     },
     "files": [
       "./*",
@@ -58,8 +58,7 @@
     "directories": {
       "buildResources": ".",
       "output": "releases"
-    },
-    "asar": false
+    }
   },
   "dependencies": {
     "@angular/animations": "^5.0.3",
