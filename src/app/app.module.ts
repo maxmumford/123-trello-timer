@@ -7,7 +7,7 @@ import 'rxjs/add/operator/take';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatTooltipModule,
     MatMenuModule, MatFormFieldModule, MatInputModule, MatSnackBarModule, MatCardModule,
     MatCheckboxModule, 
@@ -40,6 +40,7 @@ import { TrelloComponent } from 'app/components/trello/trello.component';
 
 import * as Raven from 'raven-js';
 import { LoadingComponent } from 'app/components/elements/loading.component';
+import { TrelloInterceptor } from 'app/interceptors/trello.interceptor';
 
 Raven		
   .config('https://c6d33501e3b4403b92b9d8a84c1b3272@sentry.io/252885')		
@@ -47,7 +48,6 @@ Raven
 
 export class TrelloTimerErrorHandler implements ErrorHandler {
   handleError(err:any) : void {
-    alert(err)
     Raven.captureException(err)
   }
 }
@@ -104,7 +104,8 @@ export class TrelloTimerErrorHandler implements ErrorHandler {
     TrelloService,
     TrackService,
 
-    { provide: ErrorHandler, useClass: TrelloTimerErrorHandler }
+    { provide: ErrorHandler, useClass: TrelloTimerErrorHandler },
+    { provide: HTTP_INTERCEPTORS, useClass: TrelloInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

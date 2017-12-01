@@ -7,9 +7,6 @@ import { Router, Resolve, RouterStateSnapshot,
 import { AuthService } from 'app/services/auth.service';
 import { ElectronService } from 'app/services/electron.service';
 
-import * as storage from "electron-json-storage"
-storage.setDataPath(storage.getDefaultDataPath() + "/timey")
-
 export interface TrelloUser {
   id: string,
   username: string
