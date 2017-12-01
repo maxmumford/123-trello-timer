@@ -261,9 +261,10 @@ module.exports = {
     "url": "require('url')",
     "util": "require('util')",
     "zlib": "require('zlib')",
-
+    
     // TIMEY
     "osx-mouse": 'require(\'osx-mouse\')',
+    "request": "require('request')",
   },
   "resolve": {
     "extensions": [

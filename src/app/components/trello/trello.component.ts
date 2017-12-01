@@ -62,7 +62,7 @@ export class TrelloComponent implements OnInit {
 
   authorizeToken(token: string){
       
-    this.trelloWindow = new BrowserWindow({width: 800, height: 800})
+    this.trelloWindow = new remote.BrowserWindow({width: 800, height: 800})
     
     this.trelloWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
       let params = querystring.parse(newUrl.split("?")[1])

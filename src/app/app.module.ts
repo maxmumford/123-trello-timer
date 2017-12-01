@@ -38,15 +38,9 @@ import { TimePickerComponent } from 'app/components/controls/timepicker.componen
 import { TruncatePipe } from 'app/pipes/truncate.pipe';
 import { TrelloComponent } from 'app/components/trello/trello.component';
 
-import * as Raven from 'raven-js';
-
-Raven
-  .config('https://c6d33501e3b4403b92b9d8a84c1b3272@sentry.io/252885')
-  .install();
-
-export class RavenErrorHandler implements ErrorHandler {
+export class TrelloTimerErrorHandler implements ErrorHandler {
   handleError(err:any) : void {
-    Raven.captureException(err);
+    alert(err)
   }
 }
 
@@ -101,7 +95,7 @@ export class RavenErrorHandler implements ErrorHandler {
     TrelloService,
     TrackService,
 
-    { provide: ErrorHandler, useClass: RavenErrorHandler }
+    { provide: ErrorHandler, useClass: TrelloTimerErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
