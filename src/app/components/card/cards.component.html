@@ -1,4 +1,6 @@
-<section *ngIf="cards">
+<timey-loading *ngIf="loading"></timey-loading>
+
+<section *ngIf="cards && !loading">
   <mat-nav-list *ngFor="let card of cards">
     <a mat-list-item (click)="selectCard(card)" [class.selected]="trackService.selectedCard && trackService.selectedCard.id == card.id">
       <div>{{ card.name | truncate: [60, "..."] }}</div>

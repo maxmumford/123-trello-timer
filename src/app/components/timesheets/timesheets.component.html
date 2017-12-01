@@ -1,4 +1,6 @@
-<section *ngIf="timesheetsUninvoiced">
+<timey-loading *ngIf="loading"></timey-loading>
+
+<section *ngIf="timesheetsUninvoiced && !loading">
 
   <mat-card *ngFor="let timesheet of timesheetsUninvoiced" [class.selected]="isSelected(timesheet.id)">
 

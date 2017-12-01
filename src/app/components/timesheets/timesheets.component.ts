@@ -27,6 +27,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
   selectedTimesheetIds: string[] = []
   hourlyRate: number = 45
   totalAmountFriendly: string = ""
+  loading = false
   
   @Input()
   boardChanged: EventEmitter<TrelloBoard>
@@ -45,11 +46,13 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
         this.unsubscribe()
         this.getTimesheets()
         this.timesheets = []
+        this.loading = true
         this.hourlyRate = this.trackService.selectedBoard.hourlyRate ? this.trackService.selectedBoard.hourlyRate : 45
       })
       
     this.getTimesheets()
     this.hourlyRate = this.trackService.selectedBoard.hourlyRate ? this.trackService.selectedBoard.hourlyRate : 45
+    this.loading = true
 
   }
 
@@ -66,6 +69,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
   getTimesheets(){
     this.subscriptions.push(this.trackService.getTimesheetsForBoard(this.trackService.selectedBoard.id).subscribe(timesheets => {
       this.timesheets = timesheets
+      this.loading = false
       this.updateTimesheetsUninvoiced()
     }))
 

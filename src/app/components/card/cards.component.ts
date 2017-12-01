@@ -17,6 +17,7 @@ export class CardsComponent implements OnInit, OnDestroy {
   cards: TrelloCard[]
   cardsUpdated = false
   subscription: Subscription
+  loading = true
 
   @Input()
   boardChanged: EventEmitter<TrelloBoard>
@@ -32,6 +33,7 @@ export class CardsComponent implements OnInit, OnDestroy {
         this.cardsUpdated = false
         this.subscription.unsubscribe
         this.subscription = null
+        this.loading = true
         this.getCards()
       })
     this.getCards()
@@ -46,6 +48,7 @@ export class CardsComponent implements OnInit, OnDestroy {
     // load cards from firebase
     this.subscription = this.trackService.getCards(this.trackService.selectedBoard.id).subscribe(cards => {
       this.cards = cards
+      this.loading = false
 
       if(!this.cardsUpdated){
         this.cardsUpdated = true
