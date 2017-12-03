@@ -72,6 +72,16 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  forgotPassword(){
+    if(!this.email.valid)
+      return this.snackBar.open("Please type in your email address", null, {duration: 4000, panelClass: "danger"})
+      this.afAuth.auth.sendPasswordResetEmail(this.email.value).then(response => {
+        this.snackBar.open("Password reset email sent - it can take up to an hour to arrive", null, {duration: 5000})
+      }, error => {
+        return this.snackBar.open("Something went wrong: " + error, null, {duration: 10000, panelClass: "danger"})
+    })
+  }
+
   private snack(message: string){
     this.snackBar.open(message, null, {
       panelClass: "danger",
