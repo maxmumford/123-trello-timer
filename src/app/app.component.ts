@@ -5,6 +5,7 @@ import { TrackService } from 'app/services/track.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { TrelloService } from 'app/services/trello.service';
 import { AuthService } from 'app/services/auth.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit {
     private trackService: TrackService,
     private afAuth: AngularFireAuth,
     private trelloService: TrelloService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {
 
     if(!electronService.ipcRenderer || !electronService.childProcess){
@@ -27,7 +29,14 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit(){}
+  ngOnInit(){
+    if(localStorage.getItem('terms') == null){
+      this.snackBar.open("By using this app you agree to the terms and conditions", "Read T&Cs", {duration: 10000}).onAction().subscribe(() => {
+        this.router.navigate(['terms'])
+      })
+      localStorage.setItem('terms', "true")
+    }
+  }
 
   logoutTrello(){
     this.trelloService.removeTrelloToken()
@@ -42,6 +51,10 @@ export class AppComponent implements OnInit {
 
   trelloAuth(){
     this.router.navigate(['trello'])
+  }
+
+  terms(){
+    this.router.navigate(['terms'])
   }
   
 }

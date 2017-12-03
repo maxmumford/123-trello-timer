@@ -6,6 +6,7 @@ import { AppComponent } from 'app/app.component';
 import { TrackService } from 'app/services/track.service';
 import { Subscription } from 'rxjs/Subscription';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'timey-cards',
@@ -24,7 +25,8 @@ export class CardsComponent implements OnInit, OnDestroy {
 
   constructor(
     private trello: TrelloService,
-    private trackService: TrackService
+    private trackService: TrackService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -61,6 +63,9 @@ export class CardsComponent implements OnInit, OnDestroy {
           })
         })
       }
+    }, error => {
+      this.snackBar.open("An error occured while getting your cards: " + error, null, {duration: 5000})
+      this.loading = false
     })
   }
   
