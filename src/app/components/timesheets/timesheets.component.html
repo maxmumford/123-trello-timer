@@ -1,0 +1,48 @@
+<timey-loading *ngIf="loading"></timey-loading>
+
+<section *ngIf="timesheetsUninvoiced && !loading">
+
+  <mat-card *ngFor="let timesheet of timesheetsUninvoiced" [class.selected]="isSelected(timesheet.id)">
+
+    <!-- titles -->
+    <mat-card-header>
+      <mat-card-title matTooltip="{{ timesheet.startDate | date: 'short' }} - {{ timesheet.endDate | date: 'short' }}">
+        <strong>{{ timesheet.durationFriendly() }}</strong> on {{ timesheet.startDate | date }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{ getCardNameByCardId(timesheet.idCard) }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <!-- actions -->
+    <mat-card-actions>
+      <button (click)="edit(timesheet)" mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button (click)="delete(timesheet)" mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+      <mat-checkbox [checked]="isSelected(timesheet.id)" (change)="toggleTimesheetSelected(timesheet)"></mat-checkbox>
+    </mat-card-actions>
+  </mat-card>
+
+</section>
+
+<div *ngIf="showFab()" class="fab-container">
+  <button mat-fab (click)="invoice()" color="primary">
+    <mat-icon aria-label="Mark As Invoiced" matTooltip="Mark as invoiced">attach_money</mat-icon>
+  </button>
+</div>
+
+<div *ngIf="showFab()" class="summary mat-body-1">
+  <div class="text-left">
+    <strong>Duration: </strong>{{ totalDurationFriendly }}
+  </div>
+  <div class="hourly-rate center">
+    <span class="mat-body-1">Hourly Rate</span>
+    <input type="number" min="1" max="500" step="1" [(ngModel)]="hourlyRate" (change)="updateHourlyRate()">
+  </div>
+  <div class="text-right">
+    <strong>Amount: </strong>{{ totalAmountFriendly }}
+  </div>
+</div>

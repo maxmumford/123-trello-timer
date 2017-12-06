@@ -1,0 +1,76 @@
+:host {
+  padding-bottom: 56px;
+}
+
+section {
+  overflow: hidden;
+  padding: 16px;
+}
+
+.selected {
+  background-color: rgb(247, 247, 247);
+}
+
+mat-card {
+  margin-bottom: 16px;
+}
+
+mat-checkbox {
+  float: right;
+  margin: 12px 12px 0px 0px;
+}
+
+.fab-container {
+  position: fixed;
+  bottom: 39px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  z-index: 100;
+
+  .small {
+    transform: scale(0.7);
+  }
+}
+
+.summary {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  padding: 8px;
+  background-color: #e3e3e3;
+  border-top-left-radius: 5px;
+  color: black;
+  z-index: 99;
+  display: flex;
+
+  > * {
+    flex: 1;
+  }
+
+  .hourly-rate {
+    span {
+      min-width: 81px;
+      font-weight: bold;
+      
+    }
+
+    input {
+      font-size: 1em;
+      padding: 0px;
+      margin-left: 5px;
+
+      border-top: 1px solid transparent;
+      border-right: none;
+      border-left: none;
+      border-bottom: 1px solid #949494;
+      background-color: transparent;
+      
+      font-size: 1.2em;
+      -webkit-appearance: none;
+      border-radius: 0px;
+    }
+  }
+}

@@ -1,0 +1,46 @@
+mat-toolbar {
+  position: fixed;
+  z-index: 101;
+}
+
+.spacer {
+  height: 64px;
+}
+
+.logo {
+  max-height: 146%;
+  margin-left: -49px;
+  transform: rotate(30deg);
+  margin-top: -12px;
+  transition: margin 250ms;
+
+  &:hover {
+    margin-top: -8px;
+    margin-left: -35px;
+  }
+}
+
+.track {
+  display: inline-block;
+  margin-right: 16px;
+
+  .duration {
+    float: right;
+  }
+
+  .text {
+    float: right;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8em;
+    line-height: 0.8em;
+    margin: 1px 16px 0px 0px;
+
+    .card-name {
+      font-size: 0.9em;
+      font-weight: lighter;
+      margin-top: 8px;
+    }
+  }
+}

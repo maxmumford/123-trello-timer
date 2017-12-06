@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>123 Trello Timer</title>
+  <base href="">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+
+  <style>
+    .loader {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      bottom: 0px;
+      right: 0px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      display: flex;
+    }
+
+    .loader .container {
+      width: 50px;
+      height: 50px;
+      position: relative;
+      animation: spin 3s infinite linear;
+    }
+
+    .loader .container .dot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: orange;
+      border-radius: 10px;
+      animation: shrink-expand 2s infinite linear;
+    }
+
+    .loader .container .dot.one {
+      top: 0px;
+      right: 0px;
+    }
+
+    .loader .container .dot.two {
+      top: 20px;
+      right: 20px;
+      animation-delay: 1s;
+    }
+
+    @-moz-keyframes spin {
+      from { -moz-transform: rotate(0deg); }
+      to { -moz-transform: rotate(360deg); }
+    }
+    @-webkit-keyframes spin {
+      from { -webkit-transform: rotate(0deg); }
+      to { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes spin {
+      from {transform:rotate(0deg);}
+      to {transform:rotate(360deg);}
+    }
+    
+    @keyframes shrink-expand {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <app-root>
+    <div class="loader">
+      <div class="container">
+        <div class="dot one"></div>
+        <div class="dot two"></div>
+      </div>
+    </div>
+  </app-root>
+</body>
+</html>

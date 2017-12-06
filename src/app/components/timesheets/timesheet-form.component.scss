@@ -1,0 +1,16 @@
+section {
+  min-width: 450px;
+}
+
+.start,
+.end {
+  display: flex;
+}
+
+.card {
+  margin-bottom: 24px;
+  
+  label {
+    display: block;
+  }
+}

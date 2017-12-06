@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <img class="logo" src="../assets/images/logos/logo.svg">
+  &nbsp;
+  <img class="logo-text" src="../assets/images/logos/text.png">
+  <span class="spacer"></span>
+
+  <!-- tracking status -->
+  <span class="track">
+    <span *ngIf="trackService.track" class="duration">{{ trackService.track.duration }}</span>
+    <div class="text" *ngIf="trackService.showBoardAndCard()">
+      <span class="board-name">{{ trackService.getBoardName() | truncate: [20, "..."] }}</span>
+      <span class="card-name">{{ trackService.getCardName() | truncate: [30, "..."] }}</span>
+    </div>
+  </span>
+
+  <!-- tracking controls -->
+  <button *ngIf="trackService.selectedCard && trackService.selectedCard.id && !trackService.tracking" (click)="trackService.startTracking()" 
+      mat-raised-button color="accent">Start Tracking</button>
+  <button *ngIf="trackService.tracking" (click)="trackService.stopTracking()" mat-raised-button color="accent">Stop Tracking</button>
+
+  <!-- menu icon -->
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon aria-label="Open the menu">more_vert</mat-icon>
+  </button>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="logoutTrello()">Logout from Trello</button>
+    <button mat-menu-item (click)="logoutTimey()">Logout from 123 Trello Timer</button>
+    <button mat-menu-item (click)="terms()">Terms and Conditions</button>
+  </mat-menu>
+
+</mat-toolbar>
+
+<div class="spacer"></div>
+
+<router-outlet></router-outlet>

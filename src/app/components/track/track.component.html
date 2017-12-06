@@ -1,0 +1,33 @@
+<timey-loading *ngIf="loading"></timey-loading>
+
+<div *ngIf="!loading" class="track-container">
+  <section *ngIf="boards" class="boards">
+    <mat-nav-list *ngFor="let board of boards">
+      <a mat-list-item (click)="selectBoard(board)" [class.selected]="trackService.selectedBoard && trackService.selectedBoard.id == board.id">
+        <div class="board max-width">
+          <div *ngIf="board.backgroundImage" class="background" [style.background-image]="'url(' + board.backgroundImage + ')'"></div>
+          <span *ngIf="board.starred" class="star">★</span>
+          {{ board.name | truncate: [40, "..."] }}
+        </div>
+
+        <!-- view timesheets button -->
+        <button *ngIf="trackService.selectedBoard && trackService.selectedBoard.id == board.id && viewMode == 'timer'" 
+            mat-icon-button (click)="viewTimesheets()" matTooltip="View Timesheets">
+          <mat-icon aria-label="View Timesheets">list</mat-icon>
+        </button>
+
+        <!-- view cards -->
+        <button *ngIf="trackService.selectedBoard && trackService.selectedBoard.id == board.id && viewMode == 'timesheets'" 
+            mat-icon-button (click)="viewCards()" matTooltip="View Cards">
+          <mat-icon aria-label="View Timesheets">timer</mat-icon>
+        </button>
+
+      </a>
+    </mat-nav-list>
+  </section>
+
+  <timey-cards [boardChanged]="boardChanged" *ngIf="viewMode == 'timer' && trackService.selectedBoard"></timey-cards>
+  
+  <timey-timesheets [boardChanged]="boardChanged" *ngIf="viewMode == 'timesheets'"></timey-timesheets>
+
+</div>

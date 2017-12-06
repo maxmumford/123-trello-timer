@@ -1,0 +1,21 @@
+<div contenteditable="true" #textarea tabindex="1" (input)="change($event)" role="textarea"></div>
+
+<div class="timepicker-container">
+
+  <!-- hour -->
+  <div>
+    <select [(ngModel)]="hour" (change)="change()">
+      <option *ngFor="let hr of hours" [value]="hr">{{ hr }}</option>
+    </select>
+  </div>
+
+  <div class="separator">:</div>
+
+  <!-- minute -->
+  <div>
+    <select [(ngModel)]="minute" (change)="change()">
+      <option *ngFor="let min of minutes" [value]="min">{{ min }}</option>
+    </select>
+  </div>
+
+</div>
