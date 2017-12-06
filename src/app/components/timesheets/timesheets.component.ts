@@ -71,10 +71,17 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
       this.timesheets = timesheets
       this.loading = false
       this.updateTimesheetsUninvoiced()
+    }, error => {
+      this.loading = false
+      this.snackbar.open("Something went wrong while fetching timesheets: " + error, null, {duration: 10000, panelClass: "danger"})
     }))
-
+    
     this.subscriptions.push(this.trackService.getCards(this.trackService.selectedBoard.id).subscribe(cards => {
       this.cards = cards
+      this.loading = false
+    }, error => {
+      this.loading = false
+      this.snackbar.open("Something went wrong while fetching cards: " + error, null, {duration: 10000, panelClass: "danger"})
     }))
   }
   
