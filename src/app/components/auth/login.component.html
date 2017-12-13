@@ -1,10 +1,10 @@
-<div class="login-form">
+<form class="login-form" novalidate>
 
   <h1 class="mat-display-1">Login</h1>
 
   <!-- email -->
   <mat-form-field>
-    <input matInput placeholder="Enter your email" [formControl]="email" required>
+    <input matInput placeholder="Enter your email" [formControl]="email" required autofocus>
     <mat-error *ngIf="email.invalid">{{emailErrorMessage()}}</mat-error>
   </mat-form-field>
   
@@ -17,9 +17,9 @@
 
   <!-- buttons -->
   <div class="buttons">
-    <button (click)="register()" mat-raised-button>Register</button>
-    <button (click)="login()" mat-raised-button color="accent">Login</button>
-    <button (click)="forgotPassword()" mat-button>Forgot Password</button>
+    <button (click)="register()" type="button" mat-raised-button>Register</button>
+    <button (click)="login()" type="submit" mat-raised-button color="accent">Login</button>
+    <button (click)="forgotPassword()" type="button" mat-button>Forgot Password</button>
   </div>
 
-</div>
+</form>

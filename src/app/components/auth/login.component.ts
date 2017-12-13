@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import {ActivatedRoute, Router} from "@angular/router"
 
+import * as firebase from "firebase"
+import * as Raven from 'raven-js';
 import {AngularFireAuth} from "angularfire2/auth"
 import { AngularFirestore } from 'angularfire2/firestore';
 
@@ -52,12 +54,13 @@ export class LoginComponent implements OnInit {
   login(){
     if(!this.checkCreds())
       return
-    
-    this.afAuth.auth.signInWithEmailAndPassword(this.email.value, this.password.value).then(response => {
-      if(response && response.email)
-        this.router.navigate(['/'])
+
+    // remember login details for ever
+    this.afAuth.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+      this._doLogin()
     }).catch(error => {
-      this.snack(error.message)
+      Raven.captureException(error)
+      this._doLogin()
     })
   }
 
@@ -79,6 +82,15 @@ export class LoginComponent implements OnInit {
         this.snackBar.open("Password reset email sent - it can take up to an hour to arrive", null, {duration: 5000})
       }, error => {
         return this.snackBar.open("Something went wrong: " + error, null, {duration: 10000, panelClass: "danger"})
+    })
+  }
+
+  private _doLogin(){
+    return this.afAuth.auth.signInWithEmailAndPassword(this.email.value, this.password.value).then(response => {
+      if(response && response.email)
+      this.router.navigate(['/'])
+    }).catch(error => {
+      this.snack(error.message)
     })
   }
 
