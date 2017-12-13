@@ -1,7 +1,7 @@
 {
   "name": "123-trello-timer",
   "productName": "123 Trello Timer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Track your time spent on Trello cards and mark timesheets as invoiced",
   "homepage": "https://github.com/maxmumford/123-trello-timer",
   "author": {
