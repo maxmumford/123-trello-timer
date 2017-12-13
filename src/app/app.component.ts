@@ -6,6 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { TrelloService } from 'app/services/trello.service';
 import { AuthService } from 'app/services/auth.service';
 import { MatSnackBar } from '@angular/material';
+import { GithubService } from 'app/services/github.service';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +18,12 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private electronService: ElectronService,
+    private githubService: GithubService,
     private trackService: TrackService,
     private afAuth: AngularFireAuth,
     private trelloService: TrelloService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
 
     if(!electronService.ipcRenderer || !electronService.childProcess){
@@ -30,12 +32,27 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(){
+    this.displayTermsAndConditions()
+    this.checkForNewRelease()
+  }
+
+  displayTermsAndConditions(){
     if(localStorage.getItem('terms') == null){
       this.snackBar.open("By using this app you agree to the terms and conditions", "Read T&Cs", {duration: 10000}).onAction().subscribe(() => {
         this.router.navigate(['terms'])
       })
       localStorage.setItem('terms', "true")
     }
+  }
+
+  checkForNewRelease(){
+    this.githubService.getNewRelease().subscribe(release => {
+      if(release != null)
+        this.snackBar.open(`New version of 123 Trello Timer!`, "Download", {duration: 10000})
+            .onAction().take(1).subscribe(() => {
+          this.electronService.openUrl(release.downloadUrl)
+        })
+    })
   }
 
   logoutTrello(){

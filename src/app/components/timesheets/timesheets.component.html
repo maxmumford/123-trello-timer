@@ -29,8 +29,12 @@
 </section>
 
 <div *ngIf="showFab()" class="fab-container">
+  <button mat-fab (click)="checkAll()" color="accent" class="check-all small">
+    <mat-icon aria-label="Check all" matTooltipPosition="left" matTooltip="Check All Timesheets">check_box</mat-icon>
+  </button>
+
   <button mat-fab (click)="invoice()" color="primary">
-    <mat-icon aria-label="Mark As Invoiced" matTooltip="Mark as invoiced">attach_money</mat-icon>
+    <mat-icon aria-label="Mark As Invoiced" matTooltipPosition="left" matTooltip="Mark as invoiced">attach_money</mat-icon>
   </button>
 </div>
 

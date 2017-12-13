@@ -42,6 +42,7 @@ import * as Raven from 'raven-js';
 import { LoadingComponent } from 'app/components/elements/loading.component';
 import { TrelloInterceptor } from 'app/interceptors/trello.interceptor';
 import { TermsComponent } from 'app/components/terms/terms.component';
+import { GithubService } from 'app/services/github.service';
 
 Raven		
   .config('https://c6d33501e3b4403b92b9d8a84c1b3272@sentry.io/252885')		
@@ -50,6 +51,7 @@ Raven
 export class TrelloTimerErrorHandler implements ErrorHandler {
   handleError(err:any) : void {
     Raven.captureException(err)
+    console.log(err)
   }
 }
 
@@ -105,6 +107,7 @@ export class TrelloTimerErrorHandler implements ErrorHandler {
     AuthService,
     TrelloService,
     TrackService,
+    GithubService,
 
     { provide: ErrorHandler, useClass: TrelloTimerErrorHandler },
     { provide: HTTP_INTERCEPTORS, useClass: TrelloInterceptor, multi: true }

@@ -7,6 +7,7 @@ import { TrackService } from 'app/services/track.service';
 import { Subscription } from 'rxjs/Subscription';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { MatSnackBar } from '@angular/material';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'timey-cards',
@@ -17,8 +18,9 @@ export class CardsComponent implements OnInit, OnDestroy {
 
   cards: TrelloCard[]
   cardsUpdated = false
-  subscription: Subscription
+  cardSubscription: Subscription
   loading = true
+  ngUnsubscribe: Subject<any> = new Subject()
 
   @Input()
   boardChanged: EventEmitter<TrelloBoard>
@@ -31,10 +33,10 @@ export class CardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if(this.boardChanged)
-      this.boardChanged.subscribe(() => {
+      this.boardChanged.takeUntil(this.ngUnsubscribe).subscribe(() => {
         this.cardsUpdated = false
-        this.subscription.unsubscribe
-        this.subscription = null
+        this.cardSubscription.unsubscribe
+        this.cardSubscription = null
         this.loading = true
         this.getCards()
       })
@@ -42,19 +44,22 @@ export class CardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    this.subscription.unsubscribe()
+    this.ngUnsubscribe.next()
+    this.ngUnsubscribe.complete()
+    this.cardSubscription.unsubscribe()
   }
 
   getCards(){
 
     // load cards from firebase
-    this.subscription = this.trackService.getCards(this.trackService.selectedBoard.id).subscribe(cards => {
+    this.cardSubscription = this.trackService.getCards(this.trackService.selectedBoard.id)
+        .takeUntil(this.ngUnsubscribe).subscribe(cards => {
       this.cards = cards
       this.loading = false
 
       if(!this.cardsUpdated){
         this.cardsUpdated = true
-        this.trello.getCards(this.trackService.selectedBoard.id).subscribe(cardsTrello => {
+        this.trello.getCards(this.trackService.selectedBoard.id).takeUntil(this.ngUnsubscribe).subscribe(cardsTrello => {
           cardsTrello.forEach(cardTrello => {
             let cardFirebase = this.getCardById(cardTrello.id)
             if(cardFirebase == null || cardFirebase.name != cardTrello.name){

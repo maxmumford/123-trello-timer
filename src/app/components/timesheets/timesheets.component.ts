@@ -146,8 +146,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
       this.deselectTimesheet(timesheet.id)
     else
       this.selectTimesheet(timesheet.id)
-    this.updateTotalDurationFriendly()
-    this.updateTotalAmountFriendly()
+    this.updateTotals()
   }
 
   private totalDurationSeconds(){
@@ -160,7 +159,7 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
   }
 
   private updateHourlyRate(){
-    this.updateTotalAmountFriendly()
+    this.updateTotals()
     this.trackService.updateBoard(this.trackService.selectedBoard.id, {hourlyRate: this.hourlyRate})
   }
   
@@ -171,7 +170,8 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
 
   private updateTotalAmountFriendly(){
     let seconds = this.totalDurationSeconds()
-    this.totalAmountFriendly = (Math.round((((seconds / 60) / 60) * this.hourlyRate) * 100) / 100).toString()
+    let rounded = Math.round(seconds / 60) * 60 // round to nearest 60
+    this.totalAmountFriendly = (Math.round((((rounded / 60) / 60) * this.hourlyRate) * 100) / 100).toString()
   }
   
   private getCardNameByCardId(idCard: string){
@@ -181,6 +181,20 @@ export class TimesheetsComponent implements OnInit, OnDestroy {
 
   private showFab(){
     return this.timesheetsSelected().length > 0
+  }
+
+  private checkAll(){
+    this.timesheets.forEach(timesheet => {
+      if(!this.isSelected(timesheet.id))
+        this.selectTimesheet(timesheet.id)
+      
+    })
+    this.updateTotals()
+  }
+
+  private updateTotals(){
+    this.updateTotalDurationFriendly()
+    this.updateTotalAmountFriendly() 
   }
 
   private updateTimesheetsUninvoiced(){
